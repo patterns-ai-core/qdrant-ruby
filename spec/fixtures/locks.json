@@ -1,0 +1,8 @@
+{
+  "result": {
+    "error_message": "my error msg",
+    "write": true
+  },
+  "status": "ok",
+  "time": 1.77e-06
+}

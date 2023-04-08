@@ -1,0 +1,11 @@
+{
+  "result": {
+    "collections": [
+      {
+        "name": "test_collection"
+      }
+    ]
+  },
+  "status": "ok",
+  "time": 3.385e-06
+}

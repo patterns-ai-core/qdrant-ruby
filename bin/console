@@ -1,0 +1,20 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require "bundler/setup"
+require "qdrant"
+
+# You can add fixtures and/or initialization code here to make experimenting
+# with your gem easier. You can also use a different console, if you like.
+
+# (If you use this, don't forget to add pry to your Gemfile!)
+require "pry"
+# Pry.start
+
+client = Qdrant::Client.new(
+  url: "https://02e23d35-486d-4555-a471-0415ac641516.us-east-1-0.aws.cloud.qdrant.io:6333",
+  api_key: "yCjKEx3UPJXgTUfHgzzmZAP8kXk-4nUy7LoCdFwe8HtcDzXA-8KVVw"
+)
+
+require "irb"
+IRB.start(__FILE__)

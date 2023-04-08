@@ -1,0 +1,16 @@
+{
+  "result": {
+    "id": 1,
+    "payload": {
+      "city": "Berlin"
+    },
+    "vector": [
+      0.05,
+      0.61,
+      0.76,
+      0.74
+    ]
+  },
+  "status": "ok",
+  "time": 5.824e-05
+}

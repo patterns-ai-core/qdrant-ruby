@@ -1,0 +1,16 @@
+{
+  "result": [
+    {
+      "name": "full-snapshot-2023-04-07-14-32-20.snapshot",
+      "creation_time": "2023-04-07T14:32:20",
+      "size": 67217408
+    },
+    {
+      "name": "full-snapshot-2023-04-06-20-59-10.snapshot",
+      "creation_time": "2023-04-06T20:59:10",
+      "size": 67217408
+    }
+  ],
+  "status": "ok",
+  "time": 0.000277949
+}

@@ -1,0 +1,20 @@
+{
+  "dryRun": false,
+  "match": {
+    "class": "Question",
+    "where": {
+      "operands": null,
+      "operator": "Equal",
+      "path": ["id"],
+      "valueString": "1"
+    }
+  },
+  "output": "minimal",
+  "results": {
+    "failed": 0,
+    "limit": 10000,
+    "matches": 1,
+    "objects": null,
+    "successful": 1
+  }
+}

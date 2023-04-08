@@ -1,0 +1,17 @@
+{
+  "result": {
+    "peer_id": 111,
+    "shard_count": 1,
+    "local_shards": [
+      {
+        "shard_id": 0,
+        "points_count": 0,
+        "state": "Active"
+      }
+    ],
+    "remote_shards": [],
+    "shard_transfers": []
+  },
+  "status": "ok",
+  "time": 1.2886e-05
+}

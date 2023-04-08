@@ -1,0 +1,12 @@
+{
+  "result": {
+    "aliases": [
+      {
+        "alias_name": "alias_test_collection",
+        "collection_name": "test_collection"
+      }
+    ]
+  },
+  "status": "ok",
+  "time": 7.267e-06
+}
