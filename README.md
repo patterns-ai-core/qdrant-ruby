@@ -59,13 +59,13 @@ client.collections.create(
 
 # Update parameters of the existing collection
 client.collections.update(
-    collection_name: '',    # required
+    collection_name: "string",    # required
     optimizers_config: nil,
     params: nil
 )
 
 # Drop collection and all associated data
-client.collections.delete(collection_name: '')
+client.collections.delete(collection_name: "string")
 
 # Get list of all aliases (for a collection)
 client.collections.aliases(
