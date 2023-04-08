@@ -24,7 +24,7 @@ module Qdrant
     def connection
       @connection ||= Faraday.new(url: url) do |faraday|
         if api_key
-          faraday.headers['api-key'] = api_key
+          faraday.headers["api-key"] = api_key
         end
         faraday.request :json
         faraday.response :json, content_type: /\bjson$/

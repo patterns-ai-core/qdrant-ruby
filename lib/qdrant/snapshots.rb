@@ -30,7 +30,7 @@ module Qdrant
       filepath:
     )
       response = client.connection.get("#{PATH}/#{snapshot_name}")
-      File.open(File.expand_path(filepath), 'wb+') { |fp| fp.write(response.body) }
+      File.open(File.expand_path(filepath), "wb+") { |fp| fp.write(response.body) }
     end
   end
 end

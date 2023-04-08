@@ -46,9 +46,8 @@ module Qdrant
     # Delete points
     def delete(
       collection_name:,
-      wait: nil,
-      ordering: nil,
-      points:
+      points:, wait: nil,
+      ordering: nil
     )
       response = client.connection.post("collections/#{collection_name}/#{PATH}/delete") do |req|
         req.params["wait"] = wait unless wait.nil?
@@ -96,9 +95,8 @@ module Qdrant
     # Replace full payload of points with new one
     def overwrite_payload(
       collection_name:,
-      wait: nil,
+      payload:, wait: nil,
       ordering: nil,
-      payload:,
       points: nil,
       filter: nil
     )
@@ -111,14 +109,14 @@ module Qdrant
         req.body["points"] = points unless points.nil?
         req.body["filter"] = filter unless filter.nil?
       end
+      response.body
     end
 
     # Delete specified key payload for points
     def clear_payload_keys(
       collection_name:,
-      wait: nil,
+      keys:, wait: nil,
       ordering: nil,
-      keys:,
       points: nil,
       filter: nil
     )
@@ -129,7 +127,7 @@ module Qdrant
         req.body = {}
         req.body["keys"] = keys
         req.body["points"] = points unless points.nil?
-        req.body["filter"] = filter unless filter.nil?        
+        req.body["filter"] = filter unless filter.nil?
       end
       response.body
     end

@@ -22,7 +22,6 @@ module Qdrant
       response.body
     end
 
-
     # Set lock options. If write is locked, all write operations and collection creation are forbidden. Returns previous lock options
     def set_lock(
       write:,

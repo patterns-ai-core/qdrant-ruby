@@ -22,7 +22,7 @@ module Qdrant
       force: nil
     )
       response = client.connection.post("#{PATH}/recover") do |req|
-        req.params['force'] = force if force
+        req.params["force"] = force if force
       end
       response.body
     end

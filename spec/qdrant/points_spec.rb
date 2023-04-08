@@ -21,7 +21,7 @@ RSpec.describe Qdrant::Points do
 
     before do
       allow_any_instance_of(Faraday::Connection).to receive(:put)
-        .with('collections/test_collection/points')
+        .with("collections/test_collection/points")
         .and_return(response)
     end
 
@@ -29,11 +29,11 @@ RSpec.describe Qdrant::Points do
       response = client.points.upsert(
         collection_name: "test_collection",
         points: [
-          { id: 1, vector: [0.05, 0.61, 0.76, 0.74], payload: { city: "Berlin"} },
-          { id: 2, vector: [0.19, 0.81, 0.75, 0.11], payload: { city: ["Berlin", "London"] } }
+          {id: 1, vector: [0.05, 0.61, 0.76, 0.74], payload: {city: "Berlin"}},
+          {id: 2, vector: [0.19, 0.81, 0.75, 0.11], payload: {city: ["Berlin", "London"]}}
         ]
       )
-      expect(response.dig('status')).to eq('ok')
+      expect(response.dig("status")).to eq("ok")
     end
   end
 
@@ -44,7 +44,7 @@ RSpec.describe Qdrant::Points do
 
     before do
       allow_any_instance_of(Faraday::Connection).to receive(:get)
-        .with('collections/test_collection/points/1')
+        .with("collections/test_collection/points/1")
         .and_return(response)
     end
 
@@ -53,7 +53,7 @@ RSpec.describe Qdrant::Points do
         collection_name: "test_collection",
         id: 1
       )
-      expect(response.dig('result', 'id')).to eq(1)
+      expect(response.dig("result", "id")).to eq(1)
     end
   end
 
@@ -64,7 +64,7 @@ RSpec.describe Qdrant::Points do
 
     before do
       allow_any_instance_of(Faraday::Connection).to receive(:post)
-        .with('collections/test_collection/points/delete')
+        .with("collections/test_collection/points/delete")
         .and_return(response)
     end
 
@@ -73,7 +73,7 @@ RSpec.describe Qdrant::Points do
         collection_name: "test_collection",
         points: [3]
       )
-      expect(response.dig('status')).to eq('ok')
+      expect(response.dig("status")).to eq("ok")
     end
   end
 
@@ -84,7 +84,7 @@ RSpec.describe Qdrant::Points do
 
     before do
       allow_any_instance_of(Faraday::Connection).to receive(:post)
-        .with('collections/test_collection/points/search')
+        .with("collections/test_collection/points/search")
         .and_return(response)
     end
 
@@ -94,7 +94,7 @@ RSpec.describe Qdrant::Points do
         vector: [0.05, 0.61, 0.76, 0.74],
         limit: 10
       )
-      expect(response.dig('result').count).to eq(5)
+      expect(response.dig("result").count).to eq(5)
     end
   end
 
@@ -107,7 +107,7 @@ RSpec.describe Qdrant::Points do
 
     before do
       allow_any_instance_of(Faraday::Connection).to receive(:post)
-        .with('collections/test_collection/points/count')
+        .with("collections/test_collection/points/count")
         .and_return(response)
     end
 
@@ -115,7 +115,7 @@ RSpec.describe Qdrant::Points do
       response = client.points.count(
         collection_name: "test_collection"
       )
-      expect(response.dig('result', 'count')).to eq(5)
+      expect(response.dig("result", "count")).to eq(5)
     end
   end
 
@@ -126,7 +126,7 @@ RSpec.describe Qdrant::Points do
 
     before do
       allow_any_instance_of(Faraday::Connection).to receive(:post)
-        .with('collections/test_collection/points/search/batch')
+        .with("collections/test_collection/points/search/batch")
         .and_return(response)
     end
 
@@ -138,7 +138,7 @@ RSpec.describe Qdrant::Points do
           limit: 10
         }]
       )
-      expect(response.dig('result').count).to eq(5)
+      expect(response.dig("result").count).to eq(5)
     end
   end
 
@@ -149,7 +149,7 @@ RSpec.describe Qdrant::Points do
 
     before do
       allow_any_instance_of(Faraday::Connection).to receive(:post)
-        .with('collections/test_collection/points/recommend')
+        .with("collections/test_collection/points/recommend")
         .and_return(response)
     end
 
@@ -159,7 +159,7 @@ RSpec.describe Qdrant::Points do
         positive: [1, 2],
         limit: 5
       )
-      expect(response.dig('result').count).to eq(5)
+      expect(response.dig("result").count).to eq(5)
     end
   end
 
@@ -170,7 +170,7 @@ RSpec.describe Qdrant::Points do
 
     before do
       allow_any_instance_of(Faraday::Connection).to receive(:post)
-        .with('collections/test_collection/points/recommend/batch')
+        .with("collections/test_collection/points/recommend/batch")
         .and_return(response)
     end
 
@@ -182,7 +182,7 @@ RSpec.describe Qdrant::Points do
           limit: 5
         }]
       )
-      expect(response.dig('result').count).to eq(5)
+      expect(response.dig("result").count).to eq(5)
     end
   end
 
@@ -193,7 +193,7 @@ RSpec.describe Qdrant::Points do
 
     before do
       allow_any_instance_of(Faraday::Connection).to receive(:post)
-        .with('collections/test_collection/points/scroll')
+        .with("collections/test_collection/points/scroll")
         .and_return(response)
     end
 
@@ -202,7 +202,7 @@ RSpec.describe Qdrant::Points do
         collection_name: "test_collection",
         limit: 5
       )
-      expect(response.dig('result').count).to eq(5)
+      expect(response.dig("result").count).to eq(5)
     end
   end
 
@@ -213,7 +213,7 @@ RSpec.describe Qdrant::Points do
 
     before do
       allow_any_instance_of(Faraday::Connection).to receive(:post)
-        .with('collections/test_collection/points')
+        .with("collections/test_collection/points")
         .and_return(response)
     end
 
@@ -222,7 +222,7 @@ RSpec.describe Qdrant::Points do
         collection_name: "test_collection",
         ids: [4, 5, 1, 2, 6]
       )
-      expect(response.dig('result').count).to eq(5)
+      expect(response.dig("result").count).to eq(5)
     end
   end
 
@@ -233,7 +233,7 @@ RSpec.describe Qdrant::Points do
 
     before do
       allow_any_instance_of(Faraday::Connection).to receive(:post)
-        .with('collections/test_collection/points/payload')
+        .with("collections/test_collection/points/payload")
         .and_return(response)
     end
 
@@ -245,7 +245,7 @@ RSpec.describe Qdrant::Points do
         },
         points: [1]
       )
-      expect(response.dig('status')).to eq('ok')
+      expect(response.dig("status")).to eq("ok")
     end
   end
 
@@ -256,7 +256,7 @@ RSpec.describe Qdrant::Points do
 
     before do
       allow_any_instance_of(Faraday::Connection).to receive(:post)
-        .with('collections/test_collection/points/payload/clear')
+        .with("collections/test_collection/points/payload/clear")
         .and_return(response)
     end
 
@@ -265,7 +265,7 @@ RSpec.describe Qdrant::Points do
         collection_name: "test_collection",
         points: [1]
       )
-      expect(response.dig('status')).to eq('ok')
+      expect(response.dig("status")).to eq("ok")
     end
   end
 
@@ -276,7 +276,7 @@ RSpec.describe Qdrant::Points do
 
     before do
       allow_any_instance_of(Faraday::Connection).to receive(:post)
-        .with('collections/test_collection/points/payload/delete')
+        .with("collections/test_collection/points/payload/delete")
         .and_return(response)
     end
 
@@ -286,7 +286,7 @@ RSpec.describe Qdrant::Points do
         keys: ["city"],
         points: [1]
       )
-      expect(response.dig('status')).to eq('ok')
+      expect(response.dig("status")).to eq("ok")
     end
   end
 end

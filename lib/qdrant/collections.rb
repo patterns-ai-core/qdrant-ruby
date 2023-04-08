@@ -32,16 +32,16 @@ module Qdrant
     )
       response = client.connection.put("#{PATH}/#{collection_name}") do |req|
         req.body = {}
-        req.body['vectors'] = vectors
-        req.body['shard_number'] = shard_number unless shard_number.nil?
-        req.body['replication_factor'] = replication_factor unless replication_factor.nil?
-        req.body['write_consistency_factor'] = write_consistency_factor unless write_consistency_factor.nil?
-        req.body['on_disk_payload'] = on_disk_payload unless on_disk_payload.nil?
-        req.body['hnsw_config'] = hnsw_config unless hnsw_config.nil?
-        req.body['wal_config'] = wal_config unless wal_config.nil?
-        req.body['optimizers_config'] = optimizers_config unless optimizers_config.nil?
-        req.body['init_from'] = init_from unless init_from.nil?
-        req.body['quantization_config'] = quantization_config unless quantization_config.nil?
+        req.body["vectors"] = vectors
+        req.body["shard_number"] = shard_number unless shard_number.nil?
+        req.body["replication_factor"] = replication_factor unless replication_factor.nil?
+        req.body["write_consistency_factor"] = write_consistency_factor unless write_consistency_factor.nil?
+        req.body["on_disk_payload"] = on_disk_payload unless on_disk_payload.nil?
+        req.body["hnsw_config"] = hnsw_config unless hnsw_config.nil?
+        req.body["wal_config"] = wal_config unless wal_config.nil?
+        req.body["optimizers_config"] = optimizers_config unless optimizers_config.nil?
+        req.body["init_from"] = init_from unless init_from.nil?
+        req.body["quantization_config"] = quantization_config unless quantization_config.nil?
       end
 
       response.body
@@ -95,7 +95,7 @@ module Qdrant
         req.body = {
           field_name: field_name
         }
-        req.body['field_schema'] = field_schema unless field_schema.nil?
+        req.body["field_schema"] = field_schema unless field_schema.nil?
       end
 
       response.body
@@ -136,7 +136,7 @@ module Qdrant
       filepath:
     )
       response = client.connection.get("#{PATH}/#{collection_name}/snapshots/#{snapshot_name}")
-      File.open(File.expand_path(filepath), 'wb+') { |fp| fp.write(response.body) }
+      File.open(File.expand_path(filepath), "wb+") { |fp| fp.write(response.body) }
     end
 
     # Delete snapshot for a collection
@@ -172,12 +172,12 @@ module Qdrant
       wait: nil
     )
       response = client.connection.post("#{PATH}/#{collection_name}/snapshots/recover") do |req|
-        req.params['wait'] = wait unless wait.nil?
+        req.params["wait"] = wait unless wait.nil?
 
         req.body = {
           location: filepath
         }
-        req.body['priority'] = priority unless priority.nil?
+        req.body["priority"] = priority unless priority.nil?
       end
       response.body
     end

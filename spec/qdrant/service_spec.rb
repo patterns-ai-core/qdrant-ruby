@@ -6,18 +6,18 @@ RSpec.describe Qdrant::Service do
   let(:client) {
     Qdrant::Client.new(
       url: "localhost:8080",
-      api_key: '123'
+      api_key: "123"
     )
   }
 
   describe "#telemetry" do
     let(:response) {
       OpenStruct.new(body: {
-        "result": {
-          "id": "11111",
-          "app": {
-            "name": "qdrant",
-            "version": "1.1.0"
+        result: {
+          id: "11111",
+          app: {
+            name: "qdrant",
+            version: "1.1.0"
           }
         }
       })
@@ -30,7 +30,7 @@ RSpec.describe Qdrant::Service do
     end
 
     it "return the data" do
-      expect(client.telemetry.dig(:result, :id)).to eq('11111')
+      expect(client.telemetry.dig(:result, :id)).to eq("11111")
     end
   end
 
@@ -64,8 +64,8 @@ RSpec.describe Qdrant::Service do
         write: true,
         error_message: "my error msg"
       )
-      expect(response.dig('result', 'error_message')).to eq('my error msg')
-      expect(response.dig('result', 'write')).to eq(true)
+      expect(response.dig("result", "error_message")).to eq("my error msg")
+      expect(response.dig("result", "write")).to eq(true)
     end
   end
 
@@ -80,8 +80,8 @@ RSpec.describe Qdrant::Service do
 
     it "returns the data" do
       response = client.locks
-      expect(response.dig('result', 'error_message')).to eq('my error msg')
-      expect(response.dig('result', 'write')).to eq(true)
+      expect(response.dig("result", "error_message")).to eq("my error msg")
+      expect(response.dig("result", "write")).to eq(true)
     end
   end
 end

@@ -26,7 +26,7 @@ RSpec.describe Qdrant::Snapshots do
 
     it "creates the backup" do
       response = snapshots.create
-      expect(response.dig('result', 'name')).to eq("test_collection-6106351684939824381-2023-04-06-20-43-03.snapshot")
+      expect(response.dig("result", "name")).to eq("test_collection-6106351684939824381-2023-04-06-20-43-03.snapshot")
       expect(response["status"]).to eq("ok")
     end
   end
@@ -71,7 +71,7 @@ RSpec.describe Qdrant::Snapshots do
         .with("snapshots/my-snapshot")
         .and_return("01010101001")
 
-      allow(File).to receive(:open).with("/dir/snapshot.txt", 'wb+').and_return(999)
+      allow(File).to receive(:open).with("/dir/snapshot.txt", "wb+").and_return(999)
     end
 
     it "returns the restore status" do

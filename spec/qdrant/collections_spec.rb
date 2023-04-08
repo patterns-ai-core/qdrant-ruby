@@ -25,7 +25,7 @@ RSpec.describe Qdrant::Collections do
     end
 
     it "returns collections" do
-      expect(collections.list.dig('result', 'collections').count).to eq(1)
+      expect(collections.list.dig("result", "collections").count).to eq(1)
     end
   end
 
@@ -40,7 +40,7 @@ RSpec.describe Qdrant::Collections do
 
     it "returns the collection" do
       response = collections.get(collection_name: "test_collection")
-      expect(response.dig('result', 'status')).to eq('green')
+      expect(response.dig("result", "status")).to eq("green")
     end
   end
 
@@ -77,8 +77,8 @@ RSpec.describe Qdrant::Collections do
 
     it "returns the schema" do
       response = collections.delete(collection_name: "test_collection")
-      expect(response.dig('status')).to eq('ok')
-      expect(response.dig('result')).to eq(true)
+      expect(response.dig("status")).to eq("ok")
+      expect(response.dig("result")).to eq(true)
     end
   end
 
@@ -98,8 +98,8 @@ RSpec.describe Qdrant::Collections do
           replication_factor: 1
         }
       )
-      expect(response.dig('status')).to eq('ok')
-      expect(response.dig('result')).to eq(true)
+      expect(response.dig("status")).to eq("ok")
+      expect(response.dig("result")).to eq(true)
     end
   end
 
@@ -116,13 +116,13 @@ RSpec.describe Qdrant::Collections do
       response = collections.update_aliases(
         actions: [{
           create_alias: {
-            collection_name: 'test_collection',
-            alias_name: 'alias_test_collection'
+            collection_name: "test_collection",
+            alias_name: "alias_test_collection"
           }
         }]
       )
-      expect(response.dig('status')).to eq('ok')
-      expect(response.dig('result')).to eq(true)
+      expect(response.dig("status")).to eq("ok")
+      expect(response.dig("result")).to eq(true)
     end
   end
 
@@ -137,7 +137,7 @@ RSpec.describe Qdrant::Collections do
 
     it "returns the schema" do
       response = collections.aliases(collection_name: "test_collection")
-      expect(response.dig('result', 'aliases').count).to eq(1)
+      expect(response.dig("result", "aliases").count).to eq(1)
     end
   end
 
@@ -156,8 +156,8 @@ RSpec.describe Qdrant::Collections do
         field_name: "description",
         field_schema: "text"
       )
-      expect(response.dig('status')).to eq('ok')
-      expect(response.dig('result')).to eq(true)
+      expect(response.dig("status")).to eq("ok")
+      expect(response.dig("result")).to eq(true)
     end
   end
 
@@ -175,8 +175,8 @@ RSpec.describe Qdrant::Collections do
         collection_name: "test_collection",
         field_name: "description"
       )
-      expect(response.dig('status')).to eq('ok')
-      expect(response.dig('result')).to eq(true)
+      expect(response.dig("status")).to eq("ok")
+      expect(response.dig("result")).to eq(true)
     end
   end
 
@@ -193,7 +193,7 @@ RSpec.describe Qdrant::Collections do
       response = collections.cluster_info(
         collection_name: "test_collection"
       )
-      expect(response.dig('result', 'peer_id')).to eq(111)
+      expect(response.dig("result", "peer_id")).to eq(111)
     end
   end
 
@@ -210,13 +210,13 @@ RSpec.describe Qdrant::Collections do
       response = collections.update_cluster(
         collection_name: "test_collection",
         move_shard: {
-            shard_id: 0,
-            to_peer_id: 222,
-            from_peer_id: 111
+          shard_id: 0,
+          to_peer_id: 222,
+          from_peer_id: 111
         }
       )
-      expect(response.dig('status')).to eq('ok')
-      expect(response.dig('result')).to eq(true)
+      expect(response.dig("status")).to eq("ok")
+      expect(response.dig("result")).to eq(true)
     end
   end
 
@@ -233,7 +233,7 @@ RSpec.describe Qdrant::Collections do
       response = collections.list_snapshots(
         collection_name: "test_collection"
       )
-      expect(response.dig('result').count).to eq(2)
+      expect(response.dig("result").count).to eq(2)
     end
   end
 
@@ -252,8 +252,8 @@ RSpec.describe Qdrant::Collections do
       response = collections.create_snapshot(
         collection_name: "test_collection"
       )
-      expect(response.dig('status')).to eq('ok')
-      expect(response.dig('result', 'name')).to eq("test_collection-6106351684939824381-2023-04-06-20-43-03.snapshot")
+      expect(response.dig("status")).to eq("ok")
+      expect(response.dig("result", "name")).to eq("test_collection-6106351684939824381-2023-04-06-20-43-03.snapshot")
     end
   end
 
@@ -271,8 +271,8 @@ RSpec.describe Qdrant::Collections do
         collection_name: "test_collection",
         snapshot_name: "test_collection-6106351684939824381-2023-04-06-20-43-03.snapshot"
       )
-      expect(response.dig('status')).to eq('ok')
-      expect(response.dig('result')).to eq(true)
+      expect(response.dig("status")).to eq("ok")
+      expect(response.dig("result")).to eq(true)
     end
   end
 
@@ -283,8 +283,8 @@ RSpec.describe Qdrant::Collections do
       allow_any_instance_of(Faraday::Connection).to receive(:get)
         .with("collections/test_collection/snapshots/test_collection-6106351684939824381-2023-04-06-20-43-03.snapshot")
         .and_return(response)
-      
-      allow(File).to receive(:open).with("/dir/snapshot.txt", 'wb+').and_return(999)
+
+      allow(File).to receive(:open).with("/dir/snapshot.txt", "wb+").and_return(999)
     end
 
     it "returns the schema" do
@@ -311,8 +311,8 @@ RSpec.describe Qdrant::Collections do
         collection_name: "test_collection",
         filepath: "test_collection-6106351684939824381-2023-04-06-20-43-03.snapshot"
       )
-      expect(response.dig('status')).to eq('ok')
-      expect(response.dig('result')).to eq(true)
+      expect(response.dig("status")).to eq("ok")
+      expect(response.dig("result")).to eq(true)
     end
   end
 end

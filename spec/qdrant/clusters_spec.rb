@@ -17,7 +17,6 @@ RSpec.describe Qdrant::Clusters do
   }
 
   describe "#info" do
-
     before do
       allow_any_instance_of(Faraday::Connection).to receive(:get)
         .with("cluster")
@@ -25,7 +24,7 @@ RSpec.describe Qdrant::Clusters do
     end
 
     it "return the cluster info" do
-      expect(client.clusters.info.dig('status')).to eq('ok')
+      expect(client.clusters.info.dig("status")).to eq("ok")
     end
   end
 
@@ -37,7 +36,7 @@ RSpec.describe Qdrant::Clusters do
     end
 
     it "return the data" do
-      expect(client.clusters.recover.dig('status')).to eq('ok')
+      expect(client.clusters.recover.dig("status")).to eq("ok")
     end
   end
 
