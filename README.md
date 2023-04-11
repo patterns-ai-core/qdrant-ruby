@@ -8,7 +8,7 @@
 
 Ruby wrapper for the Qdrant vector search database API
 
-![Tests status](https://github.com/andreibondarev/qdrant-ruby/actions/workflows/ci.yml/badge.svg)
+![Tests status](https://github.com/andreibondarev/qdrant-ruby/actions/workflows/ci.yml/badge.svg) [![Gem Version](https://badge.fury.io/rb/qdrant-ruby.svg)](https://badge.fury.io/rb/qdrant-ruby)
 
 ## Installation
 
