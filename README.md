@@ -25,7 +25,7 @@ If bundler is not being used to manage dependencies, install the gem by executin
 ### Instantiating API client
 
 ```ruby
-require 'qdrant-ruby'
+require 'qdrant'
 
 client = Qdrant::Client.new(
   url: "your-qdrant-url",
