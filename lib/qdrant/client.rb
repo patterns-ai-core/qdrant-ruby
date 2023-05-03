@@ -7,18 +7,20 @@ module Qdrant
   class Client
     extend Forwardable
 
-    attr_reader :url, :api_key, :adapter
+    attr_reader :url, :api_key, :adapter, :raise_error
 
     def_delegators :service, :telemetry, :metrics, :locks, :set_lock
 
     def initialize(
       url:,
       api_key: nil,
-      adapter: Faraday.default_adapter
+      adapter: Faraday.default_adapter,
+      raise_error: false
     )
       @url = url
       @api_key = api_key
       @adapter = adapter
+      @raise_error = raise_error
     end
 
     def connection
@@ -27,6 +29,7 @@ module Qdrant
           faraday.headers["api-key"] = api_key
         end
         faraday.request :json
+        faraday.response :raise_error if raise_error
         faraday.response :json, content_type: /\bjson$/
         faraday.adapter adapter
       end
