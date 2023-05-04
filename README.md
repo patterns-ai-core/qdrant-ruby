@@ -37,7 +37,7 @@ client = Qdrant::Client.new(
 
 ```ruby
 # Get list name of all existing collections
-client.collections.list(collection_name: "string")
+client.collections.list
 
 # Get detailed information about specified existing collection
 client.collections.get(collection_name: "string")
