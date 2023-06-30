@@ -6,9 +6,15 @@
     <img alt='Ruby logo' src='https://user-images.githubusercontent.com/541665/230231593-43861278-4550-421d-a543-fd3553aac4f6.png' height='40' />
 </p>
 
-Ruby wrapper for the Qdrant vector search database API
+Ruby wrapper for the Qdrant vector search database API.
 
-![Tests status](https://github.com/andreibondarev/qdrant-ruby/actions/workflows/ci.yml/badge.svg) [![Gem Version](https://badge.fury.io/rb/qdrant-ruby.svg)](https://badge.fury.io/rb/qdrant-ruby)
+Part of the [Langchain.rb](https://github.com/andreibondarev/langchainrb) stack.
+
+![Tests status](https://github.com/andreibondarev/qdrant-ruby/actions/workflows/ci.yml/badge.svg)
+[![Gem Version](https://badge.fury.io/rb/qdrant-ruby.svg)](https://badge.fury.io/rb/qdrant-ruby)
+[![Docs](http://img.shields.io/badge/yard-docs-blue.svg)](http://rubydoc.info/gems/qdrant-ruby)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/andreibondarev/qdrant-ruby/blob/main/LICENSE.txt)
+[![](https://dcbadge.vercel.app/api/server/WDARp7J2n8?compact=true&style=flat)](https://discord.gg/WDARp7J2n8)
 
 ## Installation
 
