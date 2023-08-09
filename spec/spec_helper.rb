@@ -4,7 +4,6 @@ require "json"
 require "ostruct"
 require "qdrant"
 require "faraday"
-require "faraday_middleware"
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
