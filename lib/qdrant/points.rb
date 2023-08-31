@@ -71,6 +71,7 @@ module Qdrant
       response.body
     end
 
+    # Retrieve full information of points by ids
     def get_all(
       collection_name:,
       ids:,
