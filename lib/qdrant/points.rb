@@ -71,6 +71,24 @@ module Qdrant
       response.body
     end
 
+    def get_all(
+      collection_name:,
+      ids:,
+      consistency: nil,
+      with_payload: nil,
+      with_vector: nil
+    )
+      response = client.connection.post("collections/#{collection_name}/#{PATH}") do |req|
+        req.params["consistency"] = consistency unless consistency.nil?
+
+        req.body = {}
+        req.body["ids"] = ids
+        req.body["with_payload"] = with_payload unless with_payload.nil?
+        req.body["with_vector"] = with_vector unless with_vector.nil?
+      end
+      response.body
+    end
+
     # Set payload values for points
     def set_payload(
       collection_name:,

@@ -37,23 +37,23 @@ RSpec.describe Qdrant::Points do
     end
   end
 
-  describe "#get" do
+  describe "#get_all" do
     let(:response) {
-      OpenStruct.new(body: point_fixture)
+      OpenStruct.new(body: points_fixture)
     }
 
     before do
-      allow_any_instance_of(Faraday::Connection).to receive(:get)
-        .with("collections/test_collection/points/1")
+      allow_any_instance_of(Faraday::Connection).to receive(:post)
+        .with("collections/test_collection/points")
         .and_return(response)
     end
 
     it "return the data" do
-      response = client.points.get(
+      response = client.points.get_all(
         collection_name: "test_collection",
-        id: 1
+        ids: [4, 1, 2, 5, 6]
       )
-      expect(response.dig("result", "id")).to eq(1)
+      expect(response.dig("result").count).to eq(5)
     end
   end
 
