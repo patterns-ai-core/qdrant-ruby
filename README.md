@@ -163,6 +163,14 @@ client.points.get(
     consistency: "int"
 )
 
+# Retrieve full information of points by ids
+client.points.get_all(
+    collection_name: "string", # required
+    ids: "[int]",              # required
+    with_payload: "boolean"
+    with_vector: "boolean"
+)
+
 # Lists all data objects in reverse order of creation. The data will be returned as an array of objects.
 client.points.list(
     collection_name: "string", # required

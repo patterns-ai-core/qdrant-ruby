@@ -12,8 +12,8 @@ require "pry"
 # Pry.start
 
 client = Qdrant::Client.new(
-  url: "https://02e23d35-486d-4555-a471-0415ac641516.us-east-1-0.aws.cloud.qdrant.io:6333",
-  api_key: "yCjKEx3UPJXgTUfHgzzmZAP8kXk-4nUy7LoCdFwe8HtcDzXA-8KVVw"
+  url: ENV["QDRANT_URL"],
+  api_key: ENV["QDRANT_API_KEY"]
 )
 
 require "irb"
