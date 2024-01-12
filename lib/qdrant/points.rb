@@ -47,7 +47,8 @@ module Qdrant
     def delete(
       collection_name:,
       points:, wait: nil,
-      ordering: nil
+      ordering: nil,
+      filter: nil
     )
       response = client.connection.post("collections/#{collection_name}/#{PATH}/delete") do |req|
         req.params["wait"] = wait unless wait.nil?
@@ -55,6 +56,7 @@ module Qdrant
 
         req.body = {}
         req.body["points"] = points
+        req.body["filter"] = filter unless filter.nil?
       end
       response.body
     end
