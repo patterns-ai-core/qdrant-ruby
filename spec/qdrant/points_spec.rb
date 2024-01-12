@@ -71,7 +71,8 @@ RSpec.describe Qdrant::Points do
     it "return the data" do
       response = client.points.delete(
         collection_name: "test_collection",
-        points: [3]
+        points: [3],
+        filter: []
       )
       expect(response.dig("status")).to eq("ok")
     end
