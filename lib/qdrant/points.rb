@@ -46,16 +46,21 @@ module Qdrant
     # Delete points
     def delete(
       collection_name:,
-      points:, wait: nil,
+      points: nil,
+      wait: nil,
       ordering: nil,
       filter: nil
     )
+
+      raise ArgumentError, "Either points or filter should be provided" if points.nil? && filter.nil?
+
       response = client.connection.post("collections/#{collection_name}/#{PATH}/delete") do |req|
         req.params["wait"] = wait unless wait.nil?
         req.params["ordering"] = ordering unless ordering.nil?
 
         req.body = {}
-        req.body["points"] = points
+
+        req.body["points"] = points unless filter.nil?
         req.body["filter"] = filter unless filter.nil?
       end
       response.body
