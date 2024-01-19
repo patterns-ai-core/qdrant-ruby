@@ -60,7 +60,7 @@ module Qdrant
 
         req.body = {}
 
-        req.body["points"] = points unless filter.nil?
+        req.body["points"] = points unless points.nil?
         req.body["filter"] = filter unless filter.nil?
       end
       response.body
