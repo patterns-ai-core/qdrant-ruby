@@ -14,6 +14,16 @@ RSpec.describe Qdrant::Client do
     it "creates a client" do
       expect(client).to be_a(Qdrant::Client)
     end
+
+    it "accepts a custom logger" do
+      logger = Logger.new($stdout)
+      client = Qdrant::Client.new(
+        url: "localhost:8080",
+        api_key: "123",
+        logger: logger
+      )
+      expect(client.logger).to eq(logger)
+    end
   end
 
   describe "#points" do
