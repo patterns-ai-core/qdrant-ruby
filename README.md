@@ -34,8 +34,8 @@ If bundler is not being used to manage dependencies, install the gem by executin
 require 'qdrant'
 
 client = Qdrant::Client.new(
-  url: "your-qdrant-url",
-  api_key: "your-qdrant-api-key"
+  url: ENV["QDRANT_URL"],
+  api_key: ENV["QDRANT_API_KEY"]
 )
 ```
 
