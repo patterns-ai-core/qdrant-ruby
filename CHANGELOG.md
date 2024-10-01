@@ -1,5 +1,8 @@
 ## [Unreleased]
 
+## [0.9.8] - 2024-10-01
+- Qdrant::Client constructor accepts customer logger: to be passed in
+
 ## [0.9.7] - 2024-01-19
 - fix: points/delete api
 
