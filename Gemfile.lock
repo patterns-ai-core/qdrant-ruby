@@ -33,7 +33,7 @@ GEM
       pry (>= 0.13, < 0.15)
     racc (1.8.1)
     rainbow (3.1.1)
-    rake (13.0.6)
+    rake (13.2.1)
     regexp_parser (2.9.2)
     rexml (3.3.9)
     rspec (3.11.0)
@@ -89,7 +89,7 @@ PLATFORMS
 DEPENDENCIES
   pry-byebug (~> 3.9)
   qdrant-ruby!
-  rake (~> 13.0)
+  rake (~> 13.2)
   rspec (~> 3.0)
   standard (~> 1.28.5)
 
