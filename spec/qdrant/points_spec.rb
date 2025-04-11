@@ -302,7 +302,7 @@ RSpec.describe Qdrant::Points do
         .and_return(response)
     end
 
-    it "return the data" do
+    it "returns the data" do
       response = client.points.query(
         collection_name: "test_collection",
         query: [0.05, 0.61, 0.76, 0.74],
