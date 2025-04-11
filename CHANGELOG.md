@@ -1,4 +1,6 @@
 ## [Unreleased]
+
+## [0.9.9] - 2024-04-11
 - Allow sparse_vectors to be passed to collections.create
 - Support query endpoint
 
