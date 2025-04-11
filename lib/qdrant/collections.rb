@@ -20,6 +20,7 @@ module Qdrant
     def create(
       collection_name:,
       vectors:,
+      sparse_vectors: nil,
       shard_number: nil,
       replication_factor: nil,
       write_consistency_factor: nil,
@@ -33,6 +34,7 @@ module Qdrant
       response = client.connection.put("#{PATH}/#{collection_name}") do |req|
         req.body = {}
         req.body["vectors"] = vectors
+        req.body["sparse_vectors"] = sparse_vectors unless sparse_vectors.nil?
         req.body["shard_number"] = shard_number unless shard_number.nil?
         req.body["replication_factor"] = replication_factor unless replication_factor.nil?
         req.body["write_consistency_factor"] = write_consistency_factor unless write_consistency_factor.nil?
