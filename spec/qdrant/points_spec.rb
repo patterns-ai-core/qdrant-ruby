@@ -290,4 +290,25 @@ RSpec.describe Qdrant::Points do
       expect(response.dig("status")).to eq("ok")
     end
   end
+
+  describe "#query" do
+    let(:response) {
+      OpenStruct.new(body: points_fixture)
+    }
+
+    before do
+      allow_any_instance_of(Faraday::Connection).to receive(:post)
+        .with("collections/test_collection/points/query")
+        .and_return(response)
+    end
+
+    it "returns the data" do
+      response = client.points.query(
+        collection_name: "test_collection",
+        query: [0.05, 0.61, 0.76, 0.74],
+        limit: 10
+      )
+      expect(response.dig("result").count).to eq(5)
+    end
+  end
 end

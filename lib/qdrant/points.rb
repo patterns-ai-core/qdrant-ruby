@@ -294,6 +294,45 @@ module Qdrant
       response.body
     end
 
+    # Universally query points. This endpoint covers all capabilities of search, recommend, discover, filters. But also enables hybrid and multi-stage queries.
+    def query(
+      collection_name:,
+      consistency: nil,
+      timeout: nil,
+      shard_key: nil,
+      prefetch: nil,
+      query: nil,
+      using: nil,
+      filter: nil,
+      params: nil,
+      score_threshold: nil,
+      limit: nil,
+      offset: nil,
+      with_vector: nil,
+      with_payload: nil,
+      lookup_from: nil
+    )
+      response = client.connection.post("collections/#{collection_name}/#{PATH}/query") do |req|
+        req.params["consistency"] = consistency unless consistency.nil?
+        req.params["timeout"] = timeout unless timeout.nil?
+
+        req.body = {}
+        req.body["shard_key"] = shard_key unless shard_key.nil?
+        req.body["prefetch"] = prefetch unless prefetch.nil?
+        req.body["query"] = query unless query.nil?
+        req.body["using"] = using unless using.nil?
+        req.body["filter"] = filter unless filter.nil?
+        req.body["params"] = params unless params.nil?
+        req.body["score_threshold"] = score_threshold unless score_threshold.nil?
+        req.body["limit"] = limit unless limit.nil?
+        req.body["offset"] = offset unless offset.nil?
+        req.body["with_vector"] = with_vector unless with_vector.nil?
+        req.body["with_payload"] = with_payload unless with_payload.nil?
+        req.body["lookup_from"] = lookup_from unless lookup_from.nil?
+      end
+      response.body
+    end
+
     # Count points which matches given filtering condition
     def count(
       collection_name:,
