@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    qdrant-ruby (0.9.8)
+    qdrant-ruby (0.9.9)
       faraday (>= 2.0.1, < 3)
 
 GEM
@@ -82,6 +82,7 @@ GEM
 
 PLATFORMS
   arm64-darwin-23
+  arm64-darwin-24
   x86_64-darwin-19
   x86_64-darwin-21
   x86_64-linux
