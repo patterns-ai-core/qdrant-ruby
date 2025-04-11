@@ -1,5 +1,6 @@
 ## [Unreleased]
 - Allow sparse_vectors to be passed to collections.create
+- Support query endpoint
 
 ## [0.9.8] - 2024-10-01
 - Qdrant::Client constructor accepts customer logger: to be passed in
