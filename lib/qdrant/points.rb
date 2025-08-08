@@ -342,7 +342,7 @@ module Qdrant
       response = client.connection.post("collections/#{collection_name}/#{PATH}/count") do |req|
         req.body = {}
         req.body["filter"] = filter unless filter.nil?
-        req.body["exact"] = filter unless exact.nil?
+        req.body["exact"] = exact unless exact.nil?
       end
       response.body
     end
