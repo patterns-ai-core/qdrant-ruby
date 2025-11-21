@@ -91,12 +91,15 @@ module Qdrant
     def create_index(
       collection_name:,
       field_name:,
-      field_schema: nil
+      field_schema: nil,
+      wait: nil,
+      ordering: nil
     )
       response = client.connection.put("#{PATH}/#{collection_name}/index") do |req|
-        req.body = {
-          field_name: field_name
-        }
+        req.params["ordering"] = ordering unless ordering.nil?
+        # Add explicit false check to avoid nil case. True is default behavior.
+        req.params["wait"] = wait unless wait.nil?
+        req.body = { field_name: field_name }
         req.body["field_schema"] = field_schema unless field_schema.nil?
       end
 
