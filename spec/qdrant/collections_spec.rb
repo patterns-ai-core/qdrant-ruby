@@ -159,6 +159,52 @@ RSpec.describe Qdrant::Collections do
       expect(response.dig("status")).to eq("ok")
       expect(response.dig("result")).to eq(true)
     end
+
+    it "adds wait=false query param when specified" do
+      allow_any_instance_of(Faraday::Connection).to receive(:put)
+        .with("collections/test_collection/index?wait=false")
+        .and_return(response)
+
+      response = collections.create_index(
+        collection_name: "test_collection",
+        field_name: "description",
+        field_schema: "text",
+        wait: false
+      )
+      expect(response.dig("status")).to eq("ok")
+      expect(response.dig("result")).to eq(true)
+    end
+
+    it "adds ordering query param when specified" do
+      allow_any_instance_of(Faraday::Connection).to receive(:put)
+        .with("collections/test_collection/index?ordering=weak")
+        .and_return(response)
+
+      response = collections.create_index(
+        collection_name: "test_collection",
+        field_name: "description",
+        field_schema: "text",
+        ordering: "weak"
+      )
+      expect(response.dig("status")).to eq("ok")
+      expect(response.dig("result")).to eq(true)
+    end
+
+    it "adds both wait=false and ordering params when specified" do
+      allow_any_instance_of(Faraday::Connection).to receive(:put)
+        .with("collections/test_collection/index?ordering=weak&wait=false")
+        .and_return(response)
+
+      response = collections.create_index(
+        collection_name: "test_collection",
+        field_name: "description",
+        field_schema: "text",
+        ordering: "weak",
+        wait: false
+      )
+      expect(response.dig("status")).to eq("ok")
+      expect(response.dig("result")).to eq(true)
+    end
   end
 
   describe "#delete_index" do
