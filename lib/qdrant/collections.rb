@@ -99,7 +99,7 @@ module Qdrant
         req.params["ordering"] = ordering unless ordering.nil?
         # Add explicit false check to avoid nil case. True is default behavior.
         req.params["wait"] = wait unless wait.nil?
-        req.body = { field_name: field_name }
+        req.body = {field_name: field_name}
         req.body["field_schema"] = field_schema unless field_schema.nil?
       end
 
