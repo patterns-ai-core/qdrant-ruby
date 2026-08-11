@@ -87,8 +87,9 @@ RSpec.describe Qdrant::Client::Connection do
 
     it "returns plain text verbatim and leaves binary snapshot bytes untouched" do
       metrics = "# TYPE qdrant_points_total counter\nqdrant_points_total 42"
-      with_server([{status: 200, reason: "OK", content_type: "text/plain", body: metrics}]) do |port, _captured|
+      with_server([{status: 200, reason: "OK", content_type: "text/plain", body: metrics}]) do |port, captured|
         expect(connection(port).get("metrics").body).to eq(metrics)
+        expect(captured.call.first[:request_line]).to start_with("GET /metrics ")
       end
 
       bytes = "\x00\x01\x02\xFF".b

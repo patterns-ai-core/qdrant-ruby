@@ -33,17 +33,12 @@ module Qdrant
       private
 
       def build_uri
-        path, query = @path.split("?", 2)
+        path, query = @path.to_s.split("?", 2)
 
-        URI.parse(@base_url).tap do |uri|
-          uri.path = File.join(uri.path.to_s, path)
-          uri.path = "/#{uri.path}" unless uri.path.start_with?("/")
-
-          uri.query = URI.encode_www_form(
-            URI
-              .decode_www_form(query.to_s)
-              .concat(@request.params.transform_keys(&:to_s).to_a)
-          )
+        URI.join(@base_url, path).tap do |uri|
+          if (query_pairs = URI.decode_www_form(query.to_s) + @request.params.to_a).any?
+            uri.query = URI.encode_www_form(query_pairs)
+          end
         end
       end
     end

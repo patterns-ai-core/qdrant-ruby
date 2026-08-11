@@ -7,7 +7,7 @@ module Qdrant
     Response = Struct.new(:status, :headers, :body)
 
     class ResponseBuilder
-      JSON_CONTENT_TYPE_REGEX = /\bjson\z/.freeze
+      JSON_CONTENT_TYPE_REGEX = /\bjson\z/
 
       def initialize(response)
         @response = response

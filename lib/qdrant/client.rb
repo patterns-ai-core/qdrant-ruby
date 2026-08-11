@@ -63,7 +63,7 @@ module Qdrant
     private
 
     def normalize_url(url)
-      raise ArgumentError, "url needs to be string" unless url.is_a?(String)
+      raise ArgumentError, "url must be a String" unless url.is_a?(String)
       return url if url.start_with?("http://", "https://")
 
       "https://#{url}"
