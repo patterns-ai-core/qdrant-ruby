@@ -2,6 +2,7 @@ PATH
   remote: .
   specs:
     qdrant-ruby (0.9.10)
+      logger
 
 GEM
   remote: https://rubygems.org/
@@ -15,6 +16,7 @@ GEM
     json (2.21.2)
     language_server-protocol (3.17.0.6)
     lint_roller (1.1.0)
+    logger (1.7.0)
     method_source (1.1.0)
     parallel (2.1.0)
     parser (3.3.12.0)
