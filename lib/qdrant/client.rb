@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-require "net/http"
-require "uri"
-require "json"
 require "logger"
 require "forwardable"
 
@@ -32,7 +29,7 @@ module Qdrant
 
     def connection
       @connection ||= Connection.new(
-        uri: uri,
+        url: url,
         api_key: api_key,
         raise_error: raise_error,
         logger: logger
@@ -66,14 +63,10 @@ module Qdrant
     private
 
     def normalize_url(url)
-      raise ArgumentError, "url needs to be string" unless url.is?(String)
+      raise ArgumentError, "url needs to be string" unless url.is_a?(String)
+      return url if url.start_with?("http://", "https://")
 
-      if url.start_with?("http://") || url.start_with?("https://")
-        return url
-      end
-
-      return "https://#{url}"
+      "https://#{url}"
     end
-
   end
 end

@@ -1,9 +1,12 @@
 # frozen_string_literal: true
 
+require "json"
+require "net/http"
+require "uri"
 
 module Qdrant
   class Client
-    RequestData = Struct.new("Qdrant::Client::RequestData", :params, :body)
+    RequestData = Struct.new(:params, :body)
 
     class RequestBuilder
       def initialize(verb, base_url, path, api_key, logger)
@@ -24,7 +27,7 @@ module Qdrant
       end
 
       def build
-        Request.new build_uri, @verb, @request.body, @api_key
+        Request.new build_uri, @verb, @request.body, @api_key, @logger
       end
 
       private
@@ -34,61 +37,62 @@ module Qdrant
 
         URI.parse(@base_url).tap do |uri|
           uri.path = File.join(uri.path.to_s, path)
+          uri.path = "/#{uri.path}" unless uri.path.start_with?("/")
+
           uri.query = URI.encode_www_form(
-                        URI
-                          .decode_www_form(query)
-                          .concat(@request.params.transform_keys(&:to_s).to_a)
-                      )
+            URI
+              .decode_www_form(query.to_s)
+              .concat(@request.params.transform_keys(&:to_s).to_a)
+          )
         end
       end
     end
 
     class Request
       def initialize(uri, verb, body, api_key, logger)
-        logger.info("#{verb.to_s.upcase} #{uri}")
         @logger = logger
-
         @uri = uri
         @verb = verb
-        @data = verb.new(uri.request_uri).tap do |r|
-          if api_key
-            r["api-key"] = api_key
-          end
+
+        @data = verb.new(uri.request_uri).tap do |request|
+          request["api-key"] = api_key if api_key
 
           if body
-            r.body = JSON.generate(body)
-            r["Content-Type"] = r["Accept"] = "application/json"
+            request.body = JSON.generate(body)
+            request["Content-Type"] = request["Accept"] = "application/json"
           end
         end
 
+        logger.info("#{verb_name} #{uri}")
         logger.info("Request headers: #{redacted_headers.inspect}")
-        logger.info("Request body: #{@request.body}") if @data.body
+        logger.info("Request body: #{@data.body}") if @data.body
       end
 
       def perform(raise_error)
-        @logger.info("Performing Request: #{@verb} #{@uri}")
+        @logger.info("Performing Request: #{verb_name} #{@uri}")
 
-        res = Net::HTTP.new(@uri.host, @uri.port) do |h|
+        response = Net::HTTP.new(@uri.host, @uri.port).tap do |h|
           h.use_ssl = true if @uri.scheme == "https"
         end.request(@data)
 
-        if raise_error
-          res.value
-        end
-        
-        @logger.info("Performing Request to #{@verb} #{@uri}: Status #{res.status}")
+        response.value if raise_error
 
-        res
-      rescue StandardError => e
-        @logger.error("#{@verb} #{@uri} failed: #{e.class}: #{e.message}")
+        @logger.info("Response status: #{response.code}")
+        response
+      rescue => e
+        @logger.error("#{verb_name} #{@uri} failed: #{e.class}: #{e.message}")
         raise
       end
 
       private
 
+      def verb_name
+        @verb.name.split("::").last.upcase
+      end
+
       def redacted_headers
-        @data.to_hash.tap do |h|
-          h.merge("api-key" => "[FILTERED]") if h.key?("api-key")
+        @data.to_hash.tap do |headers|
+          headers["api-key"] = "[FILTERED]" if headers.key?("api-key")
         end
       end
     end

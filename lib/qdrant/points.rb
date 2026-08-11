@@ -51,7 +51,6 @@ module Qdrant
       ordering: nil,
       filter: nil
     )
-
       raise ArgumentError, "Either points or filter should be provided" if points.nil? && filter.nil?
 
       response = client.connection.post("collections/#{collection_name}/#{PATH}/delete") do |req|

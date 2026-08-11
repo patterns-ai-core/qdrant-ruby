@@ -35,14 +35,14 @@ module Qdrant
         execute(Net::HTTP::Delete, path, &block)
       end
 
-      private    
+      private
 
-      def execute(verb, path, &)
+      def execute(verb, path, &block)
         response = RequestBuilder
-                      .new(verb, @url, path, @api_key, @logger)
-                      .tap(&)
-                      .build
-                      .perform(@raise_error)
+          .new(verb, @uri, path, @api_key, @logger)
+          .tap(&block)
+          .build
+          .perform(@raise_error)
 
         ResponseBuilder.new(response).build
       end
