@@ -1,7 +1,12 @@
 # frozen_string_literal: true
 
-require "faraday"
+require "net/http"
+require "uri"
+require "json"
+require "logger"
 require "forwardable"
+
+require_relative "client/connection"
 
 module Qdrant
   class Client
@@ -14,11 +19,11 @@ module Qdrant
     def initialize(
       url:,
       api_key: nil,
-      adapter: Faraday.default_adapter,
       raise_error: false,
-      logger: nil
+      logger: nil,
+      adapter: nil # Deprecated. Doesn't select the transport. Should be removed in subsequent releases
     )
-      @url = url
+      @url = normalize_url(url)
       @api_key = api_key
       @adapter = adapter
       @raise_error = raise_error
@@ -26,16 +31,12 @@ module Qdrant
     end
 
     def connection
-      @connection ||= Faraday.new(url: url) do |faraday|
-        if api_key
-          faraday.headers["api-key"] = api_key
-        end
-        faraday.request :json
-        faraday.response :logger, @logger, {headers: true, bodies: true, errors: true}
-        faraday.response :raise_error if raise_error
-        faraday.response :json, content_type: /\bjson$/
-        faraday.adapter adapter
-      end
+      @connection ||= Connection.new(
+        uri: uri,
+        api_key: api_key,
+        raise_error: raise_error,
+        logger: logger
+      )
     end
 
     def aliases
@@ -61,5 +62,18 @@ module Qdrant
     def points
       @points ||= Qdrant::Points.new(client: self)
     end
+
+    private
+
+    def normalize_url(url)
+      raise ArgumentError, "url needs to be string" unless url.is?(String)
+
+      if url.start_with?("http://") || url.start_with?("https://")
+        return url
+      end
+
+      return "https://#{url}"
+    end
+
   end
 end
