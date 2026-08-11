@@ -1,9 +1,7 @@
 # frozen_string_literal: true
 
 require "json"
-require "ostruct"
 require "qdrant"
-require "faraday"
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure

@@ -14,11 +14,7 @@ module Qdrant
       end
 
       def build
-        Response.new(
-          status: @response.code.to_i,
-          headers: @response.to_hash,
-          body: parse_body
-        )
+        Response.new(@response.code.to_i, @response.to_hash, parse_body)
       end
 
       private

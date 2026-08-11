@@ -16,10 +16,10 @@ RSpec.describe Qdrant::Snapshots do
   let(:status_response_fixture) { JSON.parse(File.read("spec/fixtures/status_response.json")) }
 
   describe "#create" do
-    let(:response) { OpenStruct.new(body: snapshot_fixture) }
+    let(:response) { Qdrant::Client::Response.new(nil, nil, snapshot_fixture) }
 
     before do
-      allow_any_instance_of(Faraday::Connection).to receive(:post)
+      allow_any_instance_of(Qdrant::Client::Connection).to receive(:post)
         .with(Qdrant::Snapshots::PATH)
         .and_return(response)
     end
@@ -32,10 +32,10 @@ RSpec.describe Qdrant::Snapshots do
   end
 
   describe "#list" do
-    let(:response) { OpenStruct.new(body: snapshots_fixture) }
+    let(:response) { Qdrant::Client::Response.new(nil, nil, snapshots_fixture) }
 
     before do
-      allow_any_instance_of(Faraday::Connection).to receive(:get)
+      allow_any_instance_of(Qdrant::Client::Connection).to receive(:get)
         .with(Qdrant::Snapshots::PATH)
         .and_return(response)
     end
@@ -48,10 +48,10 @@ RSpec.describe Qdrant::Snapshots do
   end
 
   describe "#delete" do
-    let(:response) { OpenStruct.new(body: status_response_fixture) }
+    let(:response) { Qdrant::Client::Response.new(nil, nil, status_response_fixture) }
 
     before do
-      allow_any_instance_of(Faraday::Connection).to receive(:delete)
+      allow_any_instance_of(Qdrant::Client::Connection).to receive(:delete)
         .with("snapshots/my-snapshot")
         .and_return(response)
     end
@@ -67,9 +67,9 @@ RSpec.describe Qdrant::Snapshots do
 
   describe "#download" do
     before do
-      allow_any_instance_of(Faraday::Connection).to receive(:get)
+      allow_any_instance_of(Qdrant::Client::Connection).to receive(:get)
         .with("snapshots/my-snapshot")
-        .and_return("01010101001")
+        .and_return(Qdrant::Client::Response.new(nil, nil, "01010101001"))
 
       allow(File).to receive(:open).with("/dir/snapshot.txt", "wb+").and_return(999)
     end

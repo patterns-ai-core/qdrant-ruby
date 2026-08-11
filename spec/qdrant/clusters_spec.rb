@@ -13,12 +13,12 @@ RSpec.describe Qdrant::Clusters do
   let(:cluster_fixture) { JSON.parse(File.read("spec/fixtures/cluster.json")) }
 
   let(:response) {
-    OpenStruct.new(body: cluster_fixture)
+    Qdrant::Client::Response.new(nil, nil, cluster_fixture)
   }
 
   describe "#info" do
     before do
-      allow_any_instance_of(Faraday::Connection).to receive(:get)
+      allow_any_instance_of(Qdrant::Client::Connection).to receive(:get)
         .with("cluster")
         .and_return(response)
     end
@@ -30,7 +30,7 @@ RSpec.describe Qdrant::Clusters do
 
   describe "#recover" do
     before do
-      allow_any_instance_of(Faraday::Connection).to receive(:post)
+      allow_any_instance_of(Qdrant::Client::Connection).to receive(:post)
         .with("cluster/recover")
         .and_return(response)
     end

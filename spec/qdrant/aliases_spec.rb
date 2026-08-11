@@ -14,11 +14,11 @@ RSpec.describe Qdrant::Aliases do
 
   describe "#list" do
     let(:response) {
-      OpenStruct.new(body: aliases_fixture)
+      Qdrant::Client::Response.new(nil, nil, aliases_fixture)
     }
 
     before do
-      allow_any_instance_of(Faraday::Connection).to receive(:get)
+      allow_any_instance_of(Qdrant::Client::Connection).to receive(:get)
         .with(Qdrant::Aliases::PATH)
         .and_return(response)
     end
