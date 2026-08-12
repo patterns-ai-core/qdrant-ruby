@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "spec_helper"
+require "stringio"
 
 RSpec.describe Qdrant::Snapshots do
   let(:client) {
@@ -66,20 +67,22 @@ RSpec.describe Qdrant::Snapshots do
   end
 
   describe "#download" do
-    before do
+    it "writes the downloaded snapshot bytes to the file" do
+      snapshot_bytes = "01010101001"
+      io = StringIO.new
+
       allow_any_instance_of(Qdrant::Client::Connection).to receive(:get)
         .with("snapshots/my-snapshot")
-        .and_return(Qdrant::Client::Response.new(nil, nil, "01010101001"))
+        .and_return(Qdrant::Client::Response.new(nil, nil, snapshot_bytes))
+      allow(File).to receive(:open).with("/dir/snapshot.txt", "wb+").and_yield(io)
 
-      allow(File).to receive(:open).with("/dir/snapshot.txt", "wb+").and_return(999)
-    end
-
-    it "returns the restore status" do
-      response = snapshots.download(
+      bytes = snapshots.download(
         snapshot_name: "my-snapshot",
         filepath: "/dir/snapshot.txt"
       )
-      expect(response).to eq(999) # Random number of bytes written
+
+      expect(bytes).to eq(snapshot_bytes.bytesize)
+      expect(io.string).to eq(snapshot_bytes)
     end
   end
 end

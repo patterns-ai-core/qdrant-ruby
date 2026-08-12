@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "spec_helper"
+require "stringio"
 
 RSpec.describe Qdrant::Collections do
   let(:client) {
@@ -161,49 +162,58 @@ RSpec.describe Qdrant::Collections do
     end
 
     it "adds wait=false query param when specified" do
+      request = nil
       allow_any_instance_of(Qdrant::Client::Connection).to receive(:put)
-        .with("collections/test_collection/index?wait=false")
-        .and_return(response)
+        .with("collections/test_collection/index") do |_path, &block|
+        request = Qdrant::Client::RequestData.new({}, nil).tap(&block) if block
+        response
+      end
 
-      response = collections.create_index(
+      collections.create_index(
         collection_name: "test_collection",
         field_name: "description",
         field_schema: "text",
         wait: false
       )
-      expect(response.dig("status")).to eq("ok")
-      expect(response.dig("result")).to eq(true)
+
+      expect(request.params).to eq("wait" => false)
     end
 
     it "adds ordering query param when specified" do
+      request = nil
       allow_any_instance_of(Qdrant::Client::Connection).to receive(:put)
-        .with("collections/test_collection/index?ordering=weak")
-        .and_return(response)
+        .with("collections/test_collection/index") do |_path, &block|
+        request = Qdrant::Client::RequestData.new({}, nil).tap(&block) if block
+        response
+      end
 
-      response = collections.create_index(
+      collections.create_index(
         collection_name: "test_collection",
         field_name: "description",
         field_schema: "text",
         ordering: "weak"
       )
-      expect(response.dig("status")).to eq("ok")
-      expect(response.dig("result")).to eq(true)
+
+      expect(request.params).to eq("ordering" => "weak")
     end
 
     it "adds both wait=false and ordering params when specified" do
+      request = nil
       allow_any_instance_of(Qdrant::Client::Connection).to receive(:put)
-        .with("collections/test_collection/index?ordering=weak&wait=false")
-        .and_return(response)
+        .with("collections/test_collection/index") do |_path, &block|
+        request = Qdrant::Client::RequestData.new({}, nil).tap(&block) if block
+        response
+      end
 
-      response = collections.create_index(
+      collections.create_index(
         collection_name: "test_collection",
         field_name: "description",
         field_schema: "text",
         ordering: "weak",
         wait: false
       )
-      expect(response.dig("status")).to eq("ok")
-      expect(response.dig("result")).to eq(true)
+
+      expect(request.params).to eq("ordering" => "weak", "wait" => false)
     end
   end
 
@@ -323,23 +333,23 @@ RSpec.describe Qdrant::Collections do
   end
 
   describe "#download_snapshot" do
-    let(:response) { Qdrant::Client::Response.new(nil, nil, status_response_fixture) }
+    it "writes the downloaded snapshot bytes to the file" do
+      snapshot_bytes = "snapshot-bytes-123"
+      io = StringIO.new
 
-    before do
       allow_any_instance_of(Qdrant::Client::Connection).to receive(:get)
         .with("collections/test_collection/snapshots/test_collection-6106351684939824381-2023-04-06-20-43-03.snapshot")
-        .and_return(response)
+        .and_return(Qdrant::Client::Response.new(nil, nil, snapshot_bytes))
+      allow(File).to receive(:open).with("/dir/snapshot.txt", "wb+").and_yield(io)
 
-      allow(File).to receive(:open).with("/dir/snapshot.txt", "wb+").and_return(999)
-    end
-
-    it "returns the schema" do
-      response = collections.download_snapshot(
+      bytes = collections.download_snapshot(
         collection_name: "test_collection",
         snapshot_name: "test_collection-6106351684939824381-2023-04-06-20-43-03.snapshot",
         filepath: "/dir/snapshot.txt"
       )
-      expect(response).to eq(999)
+
+      expect(bytes).to eq(snapshot_bytes.bytesize)
+      expect(io.string).to eq(snapshot_bytes)
     end
   end
 
