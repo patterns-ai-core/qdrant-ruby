@@ -1,5 +1,10 @@
 ## [Unreleased]
 
+## [0.10.0] - 2026-08-12
+- Drop Faraday dependency
+
+## [0.9.10] - 2025-11-23
+
 ## [0.9.9] - 2024-04-11
 - Allow sparse_vectors to be passed to collections.create
 - Support query endpoint
@@ -14,7 +19,8 @@
 - Updated Points#delete() method: Removed the requirement to specify points: in parameters. Now generates an error if neither points: nor filters: are provided, aligning with delete_points documentation standards.
 
 ## [0.9.5] - 2024-01-12
-- Bugfix: ArgumentError for filter in points delete 
+- Bugfix: ArgumentError for filter in points delete
+
 ## [0.9.4] - 2023-08-31
 - Introduce `Points#get_all()` method
 
