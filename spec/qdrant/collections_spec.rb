@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "spec_helper"
+require "stringio"
 
 RSpec.describe Qdrant::Collections do
   let(:client) {
@@ -16,10 +17,10 @@ RSpec.describe Qdrant::Collections do
   let(:aliases_fixture) { JSON.parse(File.read("spec/fixtures/aliases.json")) }
 
   describe "#list" do
-    let(:response) { OpenStruct.new(body: collections_fixture) }
+    let(:response) { Qdrant::Client::Response.new(nil, nil, collections_fixture) }
 
     before do
-      allow_any_instance_of(Faraday::Connection).to receive(:get)
+      allow_any_instance_of(Qdrant::Client::Connection).to receive(:get)
         .with(Qdrant::Collections::PATH)
         .and_return(response)
     end
@@ -30,10 +31,10 @@ RSpec.describe Qdrant::Collections do
   end
 
   describe "#get" do
-    let(:response) { OpenStruct.new(body: collection_fixture) }
+    let(:response) { Qdrant::Client::Response.new(nil, nil, collection_fixture) }
 
     before do
-      allow_any_instance_of(Faraday::Connection).to receive(:get)
+      allow_any_instance_of(Qdrant::Client::Connection).to receive(:get)
         .with("collections/test_collection")
         .and_return(response)
     end
@@ -45,10 +46,10 @@ RSpec.describe Qdrant::Collections do
   end
 
   describe "#create" do
-    let(:response) { OpenStruct.new(body: status_response_fixture) }
+    let(:response) { Qdrant::Client::Response.new(nil, nil, status_response_fixture) }
 
     before do
-      allow_any_instance_of(Faraday::Connection).to receive(:put)
+      allow_any_instance_of(Qdrant::Client::Connection).to receive(:put)
         .with("collections/test_collection")
         .and_return(response)
     end
@@ -67,10 +68,10 @@ RSpec.describe Qdrant::Collections do
   end
 
   describe "#delete" do
-    let(:response) { OpenStruct.new(body: status_response_fixture) }
+    let(:response) { Qdrant::Client::Response.new(nil, nil, status_response_fixture) }
 
     before do
-      allow_any_instance_of(Faraday::Connection).to receive(:delete)
+      allow_any_instance_of(Qdrant::Client::Connection).to receive(:delete)
         .with("collections/test_collection")
         .and_return(response)
     end
@@ -83,10 +84,10 @@ RSpec.describe Qdrant::Collections do
   end
 
   describe "#update" do
-    let(:response) { OpenStruct.new(body: status_response_fixture) }
+    let(:response) { Qdrant::Client::Response.new(nil, nil, status_response_fixture) }
 
     before do
-      allow_any_instance_of(Faraday::Connection).to receive(:patch)
+      allow_any_instance_of(Qdrant::Client::Connection).to receive(:patch)
         .with("collections/test_collection")
         .and_return(response)
     end
@@ -104,10 +105,10 @@ RSpec.describe Qdrant::Collections do
   end
 
   describe "#update_aliases" do
-    let(:response) { OpenStruct.new(body: status_response_fixture) }
+    let(:response) { Qdrant::Client::Response.new(nil, nil, status_response_fixture) }
 
     before do
-      allow_any_instance_of(Faraday::Connection).to receive(:post)
+      allow_any_instance_of(Qdrant::Client::Connection).to receive(:post)
         .with("collections/aliases")
         .and_return(response)
     end
@@ -127,10 +128,10 @@ RSpec.describe Qdrant::Collections do
   end
 
   describe "#aliases" do
-    let(:response) { OpenStruct.new(body: aliases_fixture) }
+    let(:response) { Qdrant::Client::Response.new(nil, nil, aliases_fixture) }
 
     before do
-      allow_any_instance_of(Faraday::Connection).to receive(:get)
+      allow_any_instance_of(Qdrant::Client::Connection).to receive(:get)
         .with("collections/test_collection/aliases")
         .and_return(response)
     end
@@ -142,10 +143,10 @@ RSpec.describe Qdrant::Collections do
   end
 
   describe "#create_index" do
-    let(:response) { OpenStruct.new(body: status_response_fixture) }
+    let(:response) { Qdrant::Client::Response.new(nil, nil, status_response_fixture) }
 
     before do
-      allow_any_instance_of(Faraday::Connection).to receive(:put)
+      allow_any_instance_of(Qdrant::Client::Connection).to receive(:put)
         .with("collections/test_collection/index")
         .and_return(response)
     end
@@ -161,57 +162,66 @@ RSpec.describe Qdrant::Collections do
     end
 
     it "adds wait=false query param when specified" do
-      allow_any_instance_of(Faraday::Connection).to receive(:put)
-        .with("collections/test_collection/index?wait=false")
-        .and_return(response)
+      request = nil
+      allow_any_instance_of(Qdrant::Client::Connection).to receive(:put)
+        .with("collections/test_collection/index") do |_path, &block|
+        request = Qdrant::Client::RequestData.new({}, nil).tap(&block) if block
+        response
+      end
 
-      response = collections.create_index(
+      collections.create_index(
         collection_name: "test_collection",
         field_name: "description",
         field_schema: "text",
         wait: false
       )
-      expect(response.dig("status")).to eq("ok")
-      expect(response.dig("result")).to eq(true)
+
+      expect(request.params).to eq("wait" => false)
     end
 
     it "adds ordering query param when specified" do
-      allow_any_instance_of(Faraday::Connection).to receive(:put)
-        .with("collections/test_collection/index?ordering=weak")
-        .and_return(response)
+      request = nil
+      allow_any_instance_of(Qdrant::Client::Connection).to receive(:put)
+        .with("collections/test_collection/index") do |_path, &block|
+        request = Qdrant::Client::RequestData.new({}, nil).tap(&block) if block
+        response
+      end
 
-      response = collections.create_index(
+      collections.create_index(
         collection_name: "test_collection",
         field_name: "description",
         field_schema: "text",
         ordering: "weak"
       )
-      expect(response.dig("status")).to eq("ok")
-      expect(response.dig("result")).to eq(true)
+
+      expect(request.params).to eq("ordering" => "weak")
     end
 
     it "adds both wait=false and ordering params when specified" do
-      allow_any_instance_of(Faraday::Connection).to receive(:put)
-        .with("collections/test_collection/index?ordering=weak&wait=false")
-        .and_return(response)
+      request = nil
+      allow_any_instance_of(Qdrant::Client::Connection).to receive(:put)
+        .with("collections/test_collection/index") do |_path, &block|
+        request = Qdrant::Client::RequestData.new({}, nil).tap(&block) if block
+        response
+      end
 
-      response = collections.create_index(
+      collections.create_index(
         collection_name: "test_collection",
         field_name: "description",
         field_schema: "text",
         ordering: "weak",
         wait: false
       )
-      expect(response.dig("status")).to eq("ok")
-      expect(response.dig("result")).to eq(true)
+
+      expect(request.params).to eq("ordering" => "weak", "wait" => false)
     end
   end
 
   describe "#delete_index" do
-    let(:response) { OpenStruct.new(body: status_response_fixture) }
+    let(:response) { Qdrant::Client::Response.new(nil, nil, status_response_fixture) }
 
     before do
-      allow_any_instance_of(Faraday::Connection).to receive(:delete)
+      allow_any_instance_of(Qdrant::Client::Connection).to receive(:delete)
         .with("collections/test_collection/index/description")
         .and_return(response)
     end
@@ -227,10 +237,10 @@ RSpec.describe Qdrant::Collections do
   end
 
   describe "#cluster_info" do
-    let(:response) { OpenStruct.new(body: JSON.parse(File.read("spec/fixtures/collection_cluster.json"))) }
+    let(:response) { Qdrant::Client::Response.new(nil, nil, JSON.parse(File.read("spec/fixtures/collection_cluster.json"))) }
 
     before do
-      allow_any_instance_of(Faraday::Connection).to receive(:get)
+      allow_any_instance_of(Qdrant::Client::Connection).to receive(:get)
         .with("collections/test_collection/cluster")
         .and_return(response)
     end
@@ -244,10 +254,10 @@ RSpec.describe Qdrant::Collections do
   end
 
   describe "#update_cluster" do
-    let(:response) { OpenStruct.new(body: status_response_fixture) }
+    let(:response) { Qdrant::Client::Response.new(nil, nil, status_response_fixture) }
 
     before do
-      allow_any_instance_of(Faraday::Connection).to receive(:post)
+      allow_any_instance_of(Qdrant::Client::Connection).to receive(:post)
         .with("collections/test_collection/cluster")
         .and_return(response)
     end
@@ -267,10 +277,10 @@ RSpec.describe Qdrant::Collections do
   end
 
   describe "#list_snapshots" do
-    let(:response) { OpenStruct.new(body: JSON.parse(File.read("spec/fixtures/snapshots.json"))) }
+    let(:response) { Qdrant::Client::Response.new(nil, nil, JSON.parse(File.read("spec/fixtures/snapshots.json"))) }
 
     before do
-      allow_any_instance_of(Faraday::Connection).to receive(:get)
+      allow_any_instance_of(Qdrant::Client::Connection).to receive(:get)
         .with("collections/test_collection/snapshots")
         .and_return(response)
     end
@@ -286,10 +296,10 @@ RSpec.describe Qdrant::Collections do
   let(:snapshot_fixture) { JSON.parse(File.read("spec/fixtures/snapshot.json")) }
 
   describe "#create_snapshot" do
-    let(:response) { OpenStruct.new(body: snapshot_fixture) }
+    let(:response) { Qdrant::Client::Response.new(nil, nil, snapshot_fixture) }
 
     before do
-      allow_any_instance_of(Faraday::Connection).to receive(:post)
+      allow_any_instance_of(Qdrant::Client::Connection).to receive(:post)
         .with("collections/test_collection/snapshots")
         .and_return(response)
     end
@@ -304,10 +314,10 @@ RSpec.describe Qdrant::Collections do
   end
 
   describe "#delete_snapshot" do
-    let(:response) { OpenStruct.new(body: status_response_fixture) }
+    let(:response) { Qdrant::Client::Response.new(nil, nil, status_response_fixture) }
 
     before do
-      allow_any_instance_of(Faraday::Connection).to receive(:delete)
+      allow_any_instance_of(Qdrant::Client::Connection).to receive(:delete)
         .with("collections/test_collection/snapshots/test_collection-6106351684939824381-2023-04-06-20-43-03.snapshot")
         .and_return(response)
     end
@@ -323,31 +333,31 @@ RSpec.describe Qdrant::Collections do
   end
 
   describe "#download_snapshot" do
-    let(:response) { OpenStruct.new(body: status_response_fixture) }
+    it "writes the downloaded snapshot bytes to the file" do
+      snapshot_bytes = "snapshot-bytes-123"
+      io = StringIO.new
 
-    before do
-      allow_any_instance_of(Faraday::Connection).to receive(:get)
+      allow_any_instance_of(Qdrant::Client::Connection).to receive(:get)
         .with("collections/test_collection/snapshots/test_collection-6106351684939824381-2023-04-06-20-43-03.snapshot")
-        .and_return(response)
+        .and_return(Qdrant::Client::Response.new(nil, nil, snapshot_bytes))
+      allow(File).to receive(:open).with("/dir/snapshot.txt", "wb+").and_yield(io)
 
-      allow(File).to receive(:open).with("/dir/snapshot.txt", "wb+").and_return(999)
-    end
-
-    it "returns the schema" do
-      response = collections.download_snapshot(
+      bytes = collections.download_snapshot(
         collection_name: "test_collection",
         snapshot_name: "test_collection-6106351684939824381-2023-04-06-20-43-03.snapshot",
         filepath: "/dir/snapshot.txt"
       )
-      expect(response).to eq(999)
+
+      expect(bytes).to eq(snapshot_bytes.bytesize)
+      expect(io.string).to eq(snapshot_bytes)
     end
   end
 
   describe "#restore_snapshot" do
-    let(:response) { OpenStruct.new(body: status_response_fixture) }
+    let(:response) { Qdrant::Client::Response.new(nil, nil, status_response_fixture) }
 
     before do
-      allow_any_instance_of(Faraday::Connection).to receive(:post)
+      allow_any_instance_of(Qdrant::Client::Connection).to receive(:post)
         .with("collections/test_collection/snapshots/recover")
         .and_return(response)
     end

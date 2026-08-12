@@ -387,6 +387,16 @@ client.set_lock(
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
 
+The default `bundle exec rake` task runs `lint` (standardrb auto-format), `spec`, and `e2e` (a hosted end-to-end smoke test against a real Qdrant deployment) in sequence. Because the E2E step needs real credentials, run it with your hosted endpoint and API key exported:
+
+```sh
+export QDRANT_URL="https://<hosted-qdrant-endpoint>"
+export QDRANT_API_KEY="<project-api-key>"
+bundle exec rake
+```
+
+The individual steps are also available as `bundle exec rake lint`, `bundle exec rake spec`, and `bundle exec rake e2e`. Run the hosted check against an isolated or disposable project, since it creates and deletes a temporary collection.
+
 To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and the created tag, and push the `.gem` file to [rubygems.org](https://rubygems.org).
 
 ## Contributing

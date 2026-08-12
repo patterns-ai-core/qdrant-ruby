@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "spec_helper"
+require "stringio"
 
 RSpec.describe Qdrant::Snapshots do
   let(:client) {
@@ -16,10 +17,10 @@ RSpec.describe Qdrant::Snapshots do
   let(:status_response_fixture) { JSON.parse(File.read("spec/fixtures/status_response.json")) }
 
   describe "#create" do
-    let(:response) { OpenStruct.new(body: snapshot_fixture) }
+    let(:response) { Qdrant::Client::Response.new(nil, nil, snapshot_fixture) }
 
     before do
-      allow_any_instance_of(Faraday::Connection).to receive(:post)
+      allow_any_instance_of(Qdrant::Client::Connection).to receive(:post)
         .with(Qdrant::Snapshots::PATH)
         .and_return(response)
     end
@@ -32,10 +33,10 @@ RSpec.describe Qdrant::Snapshots do
   end
 
   describe "#list" do
-    let(:response) { OpenStruct.new(body: snapshots_fixture) }
+    let(:response) { Qdrant::Client::Response.new(nil, nil, snapshots_fixture) }
 
     before do
-      allow_any_instance_of(Faraday::Connection).to receive(:get)
+      allow_any_instance_of(Qdrant::Client::Connection).to receive(:get)
         .with(Qdrant::Snapshots::PATH)
         .and_return(response)
     end
@@ -48,10 +49,10 @@ RSpec.describe Qdrant::Snapshots do
   end
 
   describe "#delete" do
-    let(:response) { OpenStruct.new(body: status_response_fixture) }
+    let(:response) { Qdrant::Client::Response.new(nil, nil, status_response_fixture) }
 
     before do
-      allow_any_instance_of(Faraday::Connection).to receive(:delete)
+      allow_any_instance_of(Qdrant::Client::Connection).to receive(:delete)
         .with("snapshots/my-snapshot")
         .and_return(response)
     end
@@ -66,20 +67,22 @@ RSpec.describe Qdrant::Snapshots do
   end
 
   describe "#download" do
-    before do
-      allow_any_instance_of(Faraday::Connection).to receive(:get)
+    it "writes the downloaded snapshot bytes to the file" do
+      snapshot_bytes = "01010101001"
+      io = StringIO.new
+
+      allow_any_instance_of(Qdrant::Client::Connection).to receive(:get)
         .with("snapshots/my-snapshot")
-        .and_return("01010101001")
+        .and_return(Qdrant::Client::Response.new(nil, nil, snapshot_bytes))
+      allow(File).to receive(:open).with("/dir/snapshot.txt", "wb+").and_yield(io)
 
-      allow(File).to receive(:open).with("/dir/snapshot.txt", "wb+").and_return(999)
-    end
-
-    it "returns the restore status" do
-      response = snapshots.download(
+      bytes = snapshots.download(
         snapshot_name: "my-snapshot",
         filepath: "/dir/snapshot.txt"
       )
-      expect(response).to eq(999) # Random number of bytes written
+
+      expect(bytes).to eq(snapshot_bytes.bytesize)
+      expect(io.string).to eq(snapshot_bytes)
     end
   end
 end

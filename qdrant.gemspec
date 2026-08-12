@@ -12,7 +12,7 @@ Gem::Specification.new do |spec|
   spec.description = "Ruby wrapper for the Qdrant vector search database API"
   spec.homepage = "https://github.com/andreibondarev/qdrant-ruby"
   spec.license = "Apache-2.0"
-  spec.required_ruby_version = ">= 2.6.0"
+  spec.required_ruby_version = ">= 3.3"
 
   spec.metadata["homepage_uri"] = spec.homepage
   spec.metadata["source_code_uri"] = "https://github.com/andreibondarev/qdrant-ruby"
@@ -35,6 +35,6 @@ Gem::Specification.new do |spec|
   # For more information and examples about making a new gem, check out our
   # guide at: https://bundler.io/guides/creating_gem.html
 
-  spec.add_dependency "faraday", ">= 2.0.1", "< 3"
+  spec.add_dependency "logger"
   spec.add_development_dependency "pry-byebug", "~> 3.9"
 end

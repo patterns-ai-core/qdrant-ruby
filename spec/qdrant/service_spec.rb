@@ -12,7 +12,7 @@ RSpec.describe Qdrant::Service do
 
   describe "#telemetry" do
     let(:response) {
-      OpenStruct.new(body: {
+      Qdrant::Client::Response.new(nil, nil, {
         result: {
           id: "11111",
           app: {
@@ -24,7 +24,7 @@ RSpec.describe Qdrant::Service do
     }
 
     before do
-      allow_any_instance_of(Faraday::Connection).to receive(:get)
+      allow_any_instance_of(Qdrant::Client::Connection).to receive(:get)
         .with("telemetry")
         .and_return(response)
     end
@@ -35,10 +35,10 @@ RSpec.describe Qdrant::Service do
   end
 
   describe "#metrics" do
-    let(:response) { OpenStruct.new(body: "metrics") }
+    let(:response) { Qdrant::Client::Response.new(nil, nil, "metrics") }
 
     before do
-      allow_any_instance_of(Faraday::Connection).to receive(:get)
+      allow_any_instance_of(Qdrant::Client::Connection).to receive(:get)
         .with("metrics")
         .and_return(response)
     end
@@ -51,10 +51,10 @@ RSpec.describe Qdrant::Service do
   let(:locks_fixture) { JSON.parse(File.read("spec/fixtures/locks.json")) }
 
   describe "#set_lock" do
-    let(:response) { OpenStruct.new(body: locks_fixture) }
+    let(:response) { Qdrant::Client::Response.new(nil, nil, locks_fixture) }
 
     before do
-      allow_any_instance_of(Faraday::Connection).to receive(:post)
+      allow_any_instance_of(Qdrant::Client::Connection).to receive(:post)
         .with("locks")
         .and_return(response)
     end
@@ -70,10 +70,10 @@ RSpec.describe Qdrant::Service do
   end
 
   describe "#locks" do
-    let(:response) { OpenStruct.new(body: locks_fixture) }
+    let(:response) { Qdrant::Client::Response.new(nil, nil, locks_fixture) }
 
     before do
-      allow_any_instance_of(Faraday::Connection).to receive(:get)
+      allow_any_instance_of(Qdrant::Client::Connection).to receive(:get)
         .with("locks")
         .and_return(response)
     end

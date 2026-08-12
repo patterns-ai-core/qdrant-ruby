@@ -16,11 +16,11 @@ RSpec.describe Qdrant::Points do
 
   describe "#upsert" do
     let(:response) {
-      OpenStruct.new(body: status_response_fixture)
+      Qdrant::Client::Response.new(nil, nil, status_response_fixture)
     }
 
     before do
-      allow_any_instance_of(Faraday::Connection).to receive(:put)
+      allow_any_instance_of(Qdrant::Client::Connection).to receive(:put)
         .with("collections/test_collection/points")
         .and_return(response)
     end
@@ -39,11 +39,11 @@ RSpec.describe Qdrant::Points do
 
   describe "#get_all" do
     let(:response) {
-      OpenStruct.new(body: points_fixture)
+      Qdrant::Client::Response.new(nil, nil, points_fixture)
     }
 
     before do
-      allow_any_instance_of(Faraday::Connection).to receive(:post)
+      allow_any_instance_of(Qdrant::Client::Connection).to receive(:post)
         .with("collections/test_collection/points")
         .and_return(response)
     end
@@ -59,11 +59,11 @@ RSpec.describe Qdrant::Points do
 
   describe "#delete" do
     let(:response) {
-      OpenStruct.new(body: status_response_fixture)
+      Qdrant::Client::Response.new(nil, nil, status_response_fixture)
     }
 
     before do
-      allow_any_instance_of(Faraday::Connection).to receive(:post)
+      allow_any_instance_of(Qdrant::Client::Connection).to receive(:post)
         .with("collections/test_collection/points/delete")
         .and_return(response)
     end
@@ -80,11 +80,11 @@ RSpec.describe Qdrant::Points do
 
   describe "#search" do
     let(:response) {
-      OpenStruct.new(body: points_fixture)
+      Qdrant::Client::Response.new(nil, nil, points_fixture)
     }
 
     before do
-      allow_any_instance_of(Faraday::Connection).to receive(:post)
+      allow_any_instance_of(Qdrant::Client::Connection).to receive(:post)
         .with("collections/test_collection/points/search")
         .and_return(response)
     end
@@ -103,11 +103,11 @@ RSpec.describe Qdrant::Points do
 
   describe "#count" do
     let(:response) {
-      OpenStruct.new(body: count_response_fixture)
+      Qdrant::Client::Response.new(nil, nil, count_response_fixture)
     }
 
     before do
-      allow_any_instance_of(Faraday::Connection).to receive(:post)
+      allow_any_instance_of(Qdrant::Client::Connection).to receive(:post)
         .with("collections/test_collection/points/count")
         .and_return(response)
     end
@@ -122,11 +122,11 @@ RSpec.describe Qdrant::Points do
 
   describe "#batch_search" do
     let(:response) {
-      OpenStruct.new(body: points_fixture)
+      Qdrant::Client::Response.new(nil, nil, points_fixture)
     }
 
     before do
-      allow_any_instance_of(Faraday::Connection).to receive(:post)
+      allow_any_instance_of(Qdrant::Client::Connection).to receive(:post)
         .with("collections/test_collection/points/search/batch")
         .and_return(response)
     end
@@ -145,11 +145,11 @@ RSpec.describe Qdrant::Points do
 
   describe "#recommend" do
     let(:response) {
-      OpenStruct.new(body: points_fixture)
+      Qdrant::Client::Response.new(nil, nil, points_fixture)
     }
 
     before do
-      allow_any_instance_of(Faraday::Connection).to receive(:post)
+      allow_any_instance_of(Qdrant::Client::Connection).to receive(:post)
         .with("collections/test_collection/points/recommend")
         .and_return(response)
     end
@@ -166,11 +166,11 @@ RSpec.describe Qdrant::Points do
 
   describe "#batch_recommend" do
     let(:response) {
-      OpenStruct.new(body: points_fixture)
+      Qdrant::Client::Response.new(nil, nil, points_fixture)
     }
 
     before do
-      allow_any_instance_of(Faraday::Connection).to receive(:post)
+      allow_any_instance_of(Qdrant::Client::Connection).to receive(:post)
         .with("collections/test_collection/points/recommend/batch")
         .and_return(response)
     end
@@ -189,11 +189,11 @@ RSpec.describe Qdrant::Points do
 
   describe "#scroll" do
     let(:response) {
-      OpenStruct.new(body: points_fixture)
+      Qdrant::Client::Response.new(nil, nil, points_fixture)
     }
 
     before do
-      allow_any_instance_of(Faraday::Connection).to receive(:post)
+      allow_any_instance_of(Qdrant::Client::Connection).to receive(:post)
         .with("collections/test_collection/points/scroll")
         .and_return(response)
     end
@@ -209,11 +209,11 @@ RSpec.describe Qdrant::Points do
 
   describe "#list" do
     let(:response) {
-      OpenStruct.new(body: points_fixture)
+      Qdrant::Client::Response.new(nil, nil, points_fixture)
     }
 
     before do
-      allow_any_instance_of(Faraday::Connection).to receive(:post)
+      allow_any_instance_of(Qdrant::Client::Connection).to receive(:post)
         .with("collections/test_collection/points")
         .and_return(response)
     end
@@ -229,11 +229,11 @@ RSpec.describe Qdrant::Points do
 
   describe "#set_payload" do
     let(:response) {
-      OpenStruct.new(body: status_response_fixture)
+      Qdrant::Client::Response.new(nil, nil, status_response_fixture)
     }
 
     before do
-      allow_any_instance_of(Faraday::Connection).to receive(:post)
+      allow_any_instance_of(Qdrant::Client::Connection).to receive(:post)
         .with("collections/test_collection/points/payload")
         .and_return(response)
     end
@@ -252,11 +252,11 @@ RSpec.describe Qdrant::Points do
 
   describe "#clear_payload" do
     let(:response) {
-      OpenStruct.new(body: status_response_fixture)
+      Qdrant::Client::Response.new(nil, nil, status_response_fixture)
     }
 
     before do
-      allow_any_instance_of(Faraday::Connection).to receive(:post)
+      allow_any_instance_of(Qdrant::Client::Connection).to receive(:post)
         .with("collections/test_collection/points/payload/clear")
         .and_return(response)
     end
@@ -272,11 +272,11 @@ RSpec.describe Qdrant::Points do
 
   describe "#clear_payload_keys" do
     let(:response) {
-      OpenStruct.new(body: status_response_fixture)
+      Qdrant::Client::Response.new(nil, nil, status_response_fixture)
     }
 
     before do
-      allow_any_instance_of(Faraday::Connection).to receive(:post)
+      allow_any_instance_of(Qdrant::Client::Connection).to receive(:post)
         .with("collections/test_collection/points/payload/delete")
         .and_return(response)
     end
@@ -293,11 +293,11 @@ RSpec.describe Qdrant::Points do
 
   describe "#query" do
     let(:response) {
-      OpenStruct.new(body: points_fixture)
+      Qdrant::Client::Response.new(nil, nil, points_fixture)
     }
 
     before do
-      allow_any_instance_of(Faraday::Connection).to receive(:post)
+      allow_any_instance_of(Qdrant::Client::Connection).to receive(:post)
         .with("collections/test_collection/points/query")
         .and_return(response)
     end
