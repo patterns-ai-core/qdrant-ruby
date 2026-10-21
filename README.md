@@ -181,12 +181,41 @@ client.points.list(
 
 )
 
-# Get a single data object.
+# Insert or update points. Either `points:` or `batch:` is required.
 client.points.upsert(
     collection_name: "string", # required
-    batch: {},                 # required
+    points: [],                # record-oriented: array of point hashes
+    batch: {},                 # column-oriented: hash of parallel arrays
     wait: "boolean",
     ordering: "string"
+)
+
+# Record-oriented upsert: each point is a hash with its own id, vector and payload
+client.points.upsert(
+    collection_name: "my_collection",
+    points: [
+        {id: 1, vector: [0.9, 0.1, 0.1], payload: {color: "red"}},
+        {id: 2, vector: [0.1, 0.9, 0.1], payload: {color: "green"}},
+        {id: 3, vector: [0.1, 0.1, 0.9], payload: {color: "blue"}}
+    ]
+)
+
+# Column-oriented (batch) upsert: ids, vectors and payloads are passed as parallel arrays
+client.points.upsert(
+    collection_name: "my_collection",
+    batch: {
+        ids: [1, 2, 3],
+        vectors: [
+            [0.9, 0.1, 0.1],
+            [0.1, 0.9, 0.1],
+            [0.1, 0.1, 0.9]
+        ],
+        payloads: [
+            {color: "red"},
+            {color: "green"},
+            {color: "blue"}
+        ]
+    }
 )
 
 # Delete points
