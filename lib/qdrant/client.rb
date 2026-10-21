@@ -37,7 +37,7 @@ module Qdrant
     end
 
     def aliases
-      @aliases ||= Qdrant::Aliases.new(client: self).list
+      Qdrant::Aliases.new(client: self).list
     end
 
     def collections

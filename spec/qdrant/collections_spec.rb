@@ -65,6 +65,12 @@ RSpec.describe Qdrant::Collections do
       expect(response.dig("status")).to eq("ok")
       expect(response.dig("result")).to eq(true)
     end
+
+    it "warns that init_from is no longer supported" do
+      allow(Warning).to receive(:warn)
+      collections.create(collection_name: "test_collection", vectors: {size: 4, distance: "Dot"}, init_from: {collection: "other"})
+      expect(Warning).to have_received(:warn).with(/\[DEPRECATION\] Qdrant: `init_from:`/, category: nil)
+    end
   end
 
   describe "#delete" do
@@ -357,7 +363,7 @@ RSpec.describe Qdrant::Collections do
     let(:response) { Qdrant::Client::Response.new(nil, nil, status_response_fixture) }
 
     before do
-      allow_any_instance_of(Qdrant::Client::Connection).to receive(:post)
+      allow_any_instance_of(Qdrant::Client::Connection).to receive(:put)
         .with("collections/test_collection/snapshots/recover")
         .and_return(response)
     end

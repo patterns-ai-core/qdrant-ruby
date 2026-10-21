@@ -31,6 +31,8 @@ module Qdrant
       init_from: nil,
       quantization_config: nil
     )
+      deprecation_warning("`init_from:` was removed in Qdrant 1.16 and is ignored by the server.") unless init_from.nil?
+
       response = client.connection.put("#{PATH}/#{collection_name}") do |req|
         req.body = {}
         req.body["vectors"] = vectors
@@ -176,7 +178,7 @@ module Qdrant
       priority: nil,
       wait: nil
     )
-      response = client.connection.post("#{PATH}/#{collection_name}/snapshots/recover") do |req|
+      response = client.connection.put("#{PATH}/#{collection_name}/snapshots/recover") do |req|
         req.params["wait"] = wait unless wait.nil?
 
         req.body = {

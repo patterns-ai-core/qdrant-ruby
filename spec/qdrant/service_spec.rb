@@ -59,6 +59,13 @@ RSpec.describe Qdrant::Service do
         .and_return(response)
     end
 
+    before { allow(Warning).to receive(:warn) }
+
+    it "warns that it is deprecated" do
+      client.set_lock(write: true)
+      expect(Warning).to have_received(:warn).with(/\[DEPRECATION\] Qdrant: the lock API/, category: nil)
+    end
+
     it "returns the data" do
       response = client.set_lock(
         write: true,
@@ -76,6 +83,13 @@ RSpec.describe Qdrant::Service do
       allow_any_instance_of(Qdrant::Client::Connection).to receive(:get)
         .with("locks")
         .and_return(response)
+    end
+
+    before { allow(Warning).to receive(:warn) }
+
+    it "warns that it is deprecated" do
+      client.locks
+      expect(Warning).to have_received(:warn).with(/\[DEPRECATION\] Qdrant: the lock API/, category: nil)
     end
 
     it "returns the data" do

@@ -1,4 +1,10 @@
 ## [Unreleased]
+- Fix `collections.restore_snapshot` to use PUT (POST always returned 404)
+- Fix `clusters.remove_peer` to call `DELETE /cluster/peer/{peer_id}` instead of `POST /cluster/recover`
+- `client.aliases` no longer caches the first response
+- `points.list` now requires `ids:` (the API always required it)
+- Deprecation warnings for `points.search`, `batch_search`, `recommend`, `batch_recommend` (use `points.query`), the lock API and `init_from:` (both removed in Qdrant 1.16)
+- README: fix inaccurate examples and remove the nonexistent `backups` section
 
 ## [0.10.0] - 2026-08-12
 - Drop Faraday dependency
