@@ -4,10 +4,10 @@ module Qdrant
   class Points < Base
     PATH = "points"
 
-    # Lists all data objects in reverse order of creation. The data will be returned as an array of objects.
+    # Retrieve full information of points by ids. Same as `get_all`.
     def list(
       collection_name:,
-      ids: nil,
+      ids:,
       with_payload: nil,
       with_vector: nil,
       consistency: nil
@@ -212,6 +212,8 @@ module Qdrant
       score_threshold: nil,
       consistency: nil
     )
+      deprecation_warning("`points.search` is deprecated since Qdrant 1.13 and will be removed from the server; use `points.query` instead.")
+
       response = client.connection.post("collections/#{collection_name}/#{PATH}/search") do |req|
         req.params["consistency"] = consistency unless consistency.nil?
 
@@ -234,6 +236,8 @@ module Qdrant
       searches:,
       consistency: nil
     )
+      deprecation_warning("`points.batch_search` is deprecated since Qdrant 1.13 and will be removed from the server; use `points.query` instead.")
+
       response = client.connection.post("collections/#{collection_name}/#{PATH}/search/batch") do |req|
         req.params["consistency"] = consistency unless consistency.nil?
 
@@ -259,6 +263,8 @@ module Qdrant
       lookup_from: nil,
       consistency: nil
     )
+      deprecation_warning("`points.recommend` is deprecated since Qdrant 1.13 and will be removed from the server; use `points.query` instead.")
+
       response = client.connection.post("collections/#{collection_name}/#{PATH}/recommend") do |req|
         req.params["consistency"] = consistency unless consistency.nil?
 
@@ -284,6 +290,8 @@ module Qdrant
       searches:,
       consistency: nil
     )
+      deprecation_warning("`points.batch_recommend` is deprecated since Qdrant 1.13 and will be removed from the server; use `points.query` instead.")
+
       response = client.connection.post("collections/#{collection_name}/#{PATH}/recommend/batch") do |req|
         req.params["consistency"] = consistency unless consistency.nil?
 

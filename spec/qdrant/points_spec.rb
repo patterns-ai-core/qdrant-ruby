@@ -89,6 +89,13 @@ RSpec.describe Qdrant::Points do
         .and_return(response)
     end
 
+    before { allow(Warning).to receive(:warn) }
+
+    it "warns that it is deprecated" do
+      client.points.search(collection_name: "test_collection", vector: [0.1], limit: 1)
+      expect(Warning).to have_received(:warn).with(/\[DEPRECATION\] Qdrant: `points.search`/, category: nil)
+    end
+
     it "return the data" do
       response = client.points.search(
         collection_name: "test_collection",
@@ -131,6 +138,13 @@ RSpec.describe Qdrant::Points do
         .and_return(response)
     end
 
+    before { allow(Warning).to receive(:warn) }
+
+    it "warns that it is deprecated" do
+      client.points.batch_search(collection_name: "test_collection", searches: [])
+      expect(Warning).to have_received(:warn).with(/\[DEPRECATION\] Qdrant: `points.batch_search`/, category: nil)
+    end
+
     it "return the data" do
       response = client.points.batch_search(
         collection_name: "test_collection",
@@ -154,6 +168,13 @@ RSpec.describe Qdrant::Points do
         .and_return(response)
     end
 
+    before { allow(Warning).to receive(:warn) }
+
+    it "warns that it is deprecated" do
+      client.points.recommend(collection_name: "test_collection", positive: [1], limit: 1)
+      expect(Warning).to have_received(:warn).with(/\[DEPRECATION\] Qdrant: `points.recommend`/, category: nil)
+    end
+
     it "return the data" do
       response = client.points.recommend(
         collection_name: "test_collection",
@@ -173,6 +194,13 @@ RSpec.describe Qdrant::Points do
       allow_any_instance_of(Qdrant::Client::Connection).to receive(:post)
         .with("collections/test_collection/points/recommend/batch")
         .and_return(response)
+    end
+
+    before { allow(Warning).to receive(:warn) }
+
+    it "warns that it is deprecated" do
+      client.points.batch_recommend(collection_name: "test_collection", searches: [])
+      expect(Warning).to have_received(:warn).with(/\[DEPRECATION\] Qdrant: `points.batch_recommend`/, category: nil)
     end
 
     it "return the data" do
@@ -224,6 +252,11 @@ RSpec.describe Qdrant::Points do
         ids: [4, 5, 1, 2, 6]
       )
       expect(response.dig("result").count).to eq(5)
+    end
+
+    it "requires ids" do
+      expect { client.points.list(collection_name: "test_collection") }
+        .to raise_error(ArgumentError, /ids/)
     end
   end
 

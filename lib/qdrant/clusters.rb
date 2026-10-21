@@ -21,7 +21,7 @@ module Qdrant
       peer_id:,
       force: nil
     )
-      response = client.connection.post("#{PATH}/recover") do |req|
+      response = client.connection.delete("#{PATH}/peer/#{peer_id}") do |req|
         req.params["force"] = force if force
       end
       response.body

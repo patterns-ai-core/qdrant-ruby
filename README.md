@@ -52,6 +52,7 @@ client.collections.get(collection_name: "string")
 client.collections.create(
     collection_name: "string",     # required
     vectors: {},                   # required
+    sparse_vectors: nil,
     shard_number: nil,
     replication_factor: nil,
     write_consistency_factor: nil,
@@ -59,7 +60,6 @@ client.collections.create(
     hnsw_config: nil,
     wal_config: nil,
     optimizers_config: nil,
-    init_from: nil,
     quantization_config: nil
 )
 
@@ -73,10 +73,13 @@ client.collections.update(
 # Drop collection and all associated data
 client.collections.delete(collection_name: "string")
 
-# Get list of all aliases (for a collection)
+# Get list of all aliases for a collection
 client.collections.aliases(
-    collection_name: "string" # optional
+    collection_name: "string" # required
 )
+
+# Get list of all aliases across all collections
+client.aliases
 
 # Update aliases of the collections
 client.collections.update_aliases(
@@ -101,9 +104,7 @@ client.collections.create_index(
 # Delete field index for collection
 client.collections.delete_index(
     collection_name: "string", # required
-    field_name: "string",      # required
-    wait: "boolean",
-    ordering: "ordering"
+    field_name: "string"       # required
 )
 
 # Get cluster information for a collection
@@ -118,8 +119,7 @@ client.collections.update_cluster(
         shard_id: "int",
         to_peer_id: "int",
         from_peer_id: "int"
-    },
-    timeout: "int"
+    }
 )
 
 # Create new snapshot for a collection
@@ -167,18 +167,18 @@ client.points.get(
 client.points.get_all(
     collection_name: "string", # required
     ids: "[int]",              # required
-    with_payload: "boolean"
-    with_vector: "boolean"
+    with_payload: "boolean",
+    with_vector: "boolean",
+    consistency: "int/string"
 )
 
-# Lists all data objects in reverse order of creation. The data will be returned as an array of objects.
+# Retrieve full information of points by ids. Same as `get_all`.
 client.points.list(
     collection_name: "string", # required
     ids: "[int/string]",       # required
     with_payload: nil,
     with_vector: nil,
     consistency: nil
-
 )
 
 # Insert or update points. Either `points:` or `batch:` is required.
@@ -278,6 +278,28 @@ client.points.scroll(
     consistency: "int/string"
 )
 
+# Universally query points: covers search, recommend and discover, plus hybrid and multi-stage queries
+client.points.query(
+    collection_name: "string", # required
+    query: "[float]/{}",       # a vector, a point ID, or a query object such as {recommend: {positive: [1]}}
+    using: "string",
+    prefetch: {},
+    filter: {},
+    params: {},
+    score_threshold: "float",
+    limit: "int",
+    offset: "int",
+    with_payload: "boolean",
+    with_vector: "boolean",
+    lookup_from: {},
+    shard_key: "string",
+    consistency: "int/string",
+    timeout: "int"
+)
+
+# DEPRECATED (since Qdrant 1.13): `search`, `batch_search`, `recommend` and `batch_recommend`
+# still work but are no longer documented by Qdrant and will be removed. Use `points.query` instead.
+
 # Retrieve closest points based on vector similarity and given filtering conditions
 client.points.search(
     collection_name: "string", # required
@@ -310,9 +332,9 @@ client.points.recommend(
     offset: "int",
     with_payload: "boolean",
     with_vector: "boolean",
-    score_threshold: "float"
+    score_threshold: "float",
     using: "string",
-    lookup_from: {},
+    lookup_from: {}
 )
 
 # Look for the points which are closer to stored positive examples and at the same time further to negative examples.
@@ -333,58 +355,33 @@ client.points.count(
 ### Snapshots
 ```ruby
 # Get list of snapshots of the whole storage
-client.snapshots.list(
-    collection_name: "string" # optional
-)
+client.snapshots.list
 
 # Create new snapshot of the whole storage
-client.snapshots.create(
-    collection_name: "string" # required
-)
+client.snapshots.create
 
 # Delete snapshot of the whole storage
 client.snapshots.delete(
-    collection_name: "string", # required
-    snapshot_name: "string"    # required
+    snapshot_name: "string" # required
 )
 
 # Download specified snapshot of the whole storage as a file
 client.snapshots.download(
-    collection_name: "string", # required
-    snapshot_name: "string"    # required
-    filepath: "~/Downloads/backup.txt" # required
-)
-
-
-# Get the backup
-client.backups.get(
-    backend: "filesystem",
-    id: "my-first-backup"
-)
-
-# Restore backup
-client.backups.restore(
-    backend: "filesystem",
-    id: "my-first-backup"
-)
-
-# Check the backup restore status
-client.backups.restore_status(
-    backend: "filesystem",
-    id: "my-first-backup"
+    snapshot_name: "string",                # required
+    filepath: "~/Downloads/backup.snapshot" # required
 )
 ```
 
 ### Cluster
 ```ruby
 # Get information about the current state and composition of the cluster
-client.cluster.info
+client.clusters.info
 
 # Tries to recover current peer Raft state.
-client.cluster.recover
+client.clusters.recover
 
 # Tries to remove peer from the cluster. Will return an error if peer has shards on it.
-client.cluster.remove_peer(
+client.clusters.remove_peer(
     peer_id: "int",  # required
     force: "boolean"
 )
@@ -402,12 +399,14 @@ client.metrics(
     anonymize: "boolean" # optional
 )
 
+# DEPRECATED: the lock API was removed in Qdrant 1.16. These only work against older servers.
+
 # Get lock options. If write is locked, all write operations and collection creation are forbidden
 client.locks
 
 # Set lock options. If write is locked, all write operations and collection creation are forbidden. Returns previous lock options
 client.set_lock(
-    write: "boolean" # required
+    write: "boolean", # required
     error_message: "string"
 )
 ```

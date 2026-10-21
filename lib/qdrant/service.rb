@@ -27,6 +27,8 @@ module Qdrant
       write:,
       error_message: nil
     )
+      deprecation_warning("the lock API was removed in Qdrant 1.16; `set_lock` only works against older servers.")
+
       response = client.connection.post("locks") do |req|
         req.body = {
           write: write
@@ -38,6 +40,8 @@ module Qdrant
 
     # Get lock options. If write is locked, all write operations and collection creation are forbidden
     def locks
+      deprecation_warning("the lock API was removed in Qdrant 1.16; `locks` only works against older servers.")
+
       response = client.connection.get("locks")
       response.body
     end

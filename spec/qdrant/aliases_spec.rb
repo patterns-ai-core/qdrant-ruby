@@ -26,5 +26,14 @@ RSpec.describe Qdrant::Aliases do
     it "return the nodes info" do
       expect(client.aliases).to be_a(Hash)
     end
+
+    it "fetches fresh data on every call" do
+      expect_any_instance_of(Qdrant::Client::Connection).to receive(:get)
+        .with(Qdrant::Aliases::PATH)
+        .twice
+        .and_return(response)
+
+      2.times { client.aliases }
+    end
   end
 end

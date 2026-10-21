@@ -85,22 +85,22 @@ begin
   puts "e2e: point write and read round trip passed"
 
   body = ok_body!(
-    client.points.search(
+    client.points.query(
       collection_name: collection_name,
-      vector: [1.0, 0.0, 0.0],
+      query: [1.0, 0.0, 0.0],
       limit: 1,
       with_payload: true,
       with_vector: false
     ),
-    "points.search"
+    "points.query"
   )
-  hit = body.fetch("result").first
-  assert!(hit && hit["id"] == 1, "points.search did not return point 1 first")
-  assert!(hit["score"].to_f > 0.99, "points.search score was #{hit["score"].inspect}")
+  hit = body.dig("result", "points").first
+  assert!(hit && hit["id"] == 1, "points.query did not return point 1 first")
+  assert!(hit["score"].to_f > 0.99, "points.query score was #{hit["score"].inspect}")
 
   body = ok_body!(client.points.count(collection_name: collection_name, exact: true), "points.count")
   assert!(body.dig("result", "count") == 2, "points.count did not return 2")
-  puts "e2e: search and count passed"
+  puts "e2e: query and count passed"
 
   body = ok_body!(client.points.delete(collection_name: collection_name, points: [1, 2], wait: true), "points.delete")
   assert!(body.dig("result", "status") == "completed", "points.delete did not return a completed status")
