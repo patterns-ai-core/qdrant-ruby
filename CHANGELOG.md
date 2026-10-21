@@ -1,4 +1,6 @@
 ## [Unreleased]
+
+## [0.11.0] - 2026-10-21
 - Fix `collections.restore_snapshot` to use PUT (POST always returned 404)
 - Fix `clusters.remove_peer` to call `DELETE /cluster/peer/{peer_id}` instead of `POST /cluster/recover`
 - `client.aliases` no longer caches the first response
